@@ -1,0 +1,4 @@
+# Original ESP32: Bluetooth LE only (no Classic Bluetooth), which also frees memory.
+CONFIG_BTDM_CTRL_MODE_BLE_ONLY=y
+CONFIG_BTDM_CTRL_MODE_BTDM=n
+CONFIG_BTDM_CTRL_MODE_BR_EDR_ONLY=n

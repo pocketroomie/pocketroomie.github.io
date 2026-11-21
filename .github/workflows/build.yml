@@ -1,0 +1,68 @@
+# Builds the Roomie Beacon firmware for every supported chip and publishes the install page
+# (web/ plus the firmware files) to GitHub Pages.
+name: Build firmware and publish installer
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [esp32, esp32c3, esp32s3, esp32c6, esp32h2]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (${{ matrix.target }})
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.4.1
+          target: ${{ matrix.target }}
+          path: firmware
+          # One file per chip (bootloader + partition table + app), flashed at offset 0.
+          command: >-
+            idf.py set-target ${{ matrix.target }} && idf.py build && cd build &&
+            esptool.py --chip ${{ matrix.target }} merge_bin -o roomie-beacon-${{ matrix.target }}.bin @flash_args
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.target }}
+          path: firmware/build/roomie-beacon-${{ matrix.target }}.bin
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: firmware-*
+          path: web/firmware
+          merge-multiple: true
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
