@@ -29,7 +29,7 @@
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
 
-#define FW_VERSION         1
+#define FW_VERSION         2
 #define SETUP_WINDOW_MS    (3 * 60 * 1000)   // configured beacons: setup is open this long after power-on
 #define SETUP_ADV_MS       160               // setup signal interval (quick to find)
 #define MIXED_SLOT_MS      500               // during the setup window: beacon / setup signals alternate this often
@@ -60,7 +60,7 @@ typedef struct {
 } beacon_config_t;
 
 static beacon_config_t cfg = {
-    .configured = 0, .measured_power = -59, .tx_power = -3, .interval_ms = 300,
+    .configured = 0, .measured_power = -59, .tx_power = 9, .interval_ms = 300,
 };
 
 typedef enum { MODE_SETUP, MODE_MIXED, MODE_BEACON } beacon_mode_t;
@@ -101,21 +101,30 @@ static void erase_config(void) {
 
 // MARK: Transmit power
 
+// Each chip's full range: small boards often have weak antennas and need the top levels.
+static const struct { int8_t dbm; esp_power_level_t level; } levels[] = {
+    {-12, ESP_PWR_LVL_N12}, {-9, ESP_PWR_LVL_N9}, {-6, ESP_PWR_LVL_N6}, {-3, ESP_PWR_LVL_N3},
+    {0, ESP_PWR_LVL_N0},    {3, ESP_PWR_LVL_P3},  {6, ESP_PWR_LVL_P6},  {9, ESP_PWR_LVL_P9},
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S3
+    {12, ESP_PWR_LVL_P12},  {15, ESP_PWR_LVL_P15}, {18, ESP_PWR_LVL_P18}, {21, ESP_PWR_LVL_P21},
+#elif CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2
+    {12, ESP_PWR_LVL_P12},  {15, ESP_PWR_LVL_P15}, {18, ESP_PWR_LVL_P18}, {20, ESP_PWR_LVL_P20},
+#endif
+};
+#define LEVEL_COUNT (sizeof levels / sizeof levels[0])
+
 static esp_power_level_t power_level(int8_t dbm) {
-    // Levels every supported chip has.
-    static const struct { int8_t dbm; esp_power_level_t level; } levels[] = {
-        {-12, ESP_PWR_LVL_N12}, {-9, ESP_PWR_LVL_N9}, {-6, ESP_PWR_LVL_N6}, {-3, ESP_PWR_LVL_N3},
-        {0, ESP_PWR_LVL_N0},    {3, ESP_PWR_LVL_P3},  {6, ESP_PWR_LVL_P6},  {9, ESP_PWR_LVL_P9},
-    };
     size_t best = 0;
-    for (size_t i = 1; i < sizeof levels / sizeof levels[0]; i++) {
+    for (size_t i = 1; i < LEVEL_COUNT; i++) {
         if (abs(levels[i].dbm - dbm) < abs(levels[best].dbm - dbm)) best = i;
     }
     return levels[best].level;
 }
 
-static void apply_tx_power(void) {
-    esp_power_level_t level = power_level(cfg.tx_power);
+/// The beacon signal uses the configured power; the setup signal always uses the chip's maximum,
+/// so a board is easy to find and set up whatever its antenna is like.
+static void apply_tx_power(bool setup) {
+    esp_power_level_t level = setup ? levels[LEVEL_COUNT - 1].level : power_level(cfg.tx_power);
     esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, level);
     esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, level);
 }
@@ -179,6 +188,7 @@ static void advertise(void) {
     if (connected) return;
     ble_gap_adv_stop();
     bool beacon = mode == MODE_BEACON || (mode == MODE_MIXED && beacon_slot);
+    apply_tx_power(!beacon);
     int rc = beacon ? start_beacon_adv() : start_setup_adv();
     if (rc) ESP_LOGW(TAG, "advertising failed: %d", rc);
 }
@@ -226,7 +236,7 @@ static int gap_event(struct ble_gap_event *event, void *arg) {
 //   [18..19] major (big-endian)
 //   [20..21] minor (big-endian)
 //   [22]     measured power at 1 m (int8, dBm)
-//   [23]     transmit power (int8, dBm; -12…9)
+//   [23]     transmit power (int8, dBm; -12…21, rounded to the nearest level the chip has)
 //   [24..25] advertising interval (uint16, little-endian, ms; 100…10000)
 // A reset needs only byte 0. After a write the beacon restarts with the new settings.
 
@@ -262,7 +272,7 @@ static int config_access(uint16_t conn_handle, uint16_t attr_handle,
     } else if (w[0] == CMD_CONFIGURE && len == RECORD_LEN) {
         uint16_t interval = w[24] | (w[25] << 8);
         int8_t tx = (int8_t)w[23];
-        if (interval < 100 || interval > 10000 || tx < -12 || tx > 9) return BLE_ATT_ERR_VALUE_NOT_ALLOWED;
+        if (interval < 100 || interval > 10000 || tx < -12 || tx > 21) return BLE_ATT_ERR_VALUE_NOT_ALLOWED;
         cfg.configured = 1;
         memcpy(cfg.uuid, w + 2, 16);
         cfg.major = (w[18] << 8) | w[19];
@@ -299,7 +309,6 @@ static const struct ble_gatt_svc_def services[] = {
 static void on_sync(void) {
     ble_hs_util_ensure_addr(0);
     ble_hs_id_infer_auto(0, &own_addr_type);
-    apply_tx_power();
     advertise();
     if (mode == MODE_MIXED) {
         ble_npl_callout_reset(&slot_timer, ble_npl_time_ms_to_ticks32(MIXED_SLOT_MS));

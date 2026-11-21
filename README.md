@@ -46,12 +46,12 @@ Config record (26 bytes, same layout for read and write):
 | 18–19 | major (big-endian) | same |
 | 20–21 | minor (big-endian) | same |
 | 22 | measured power at 1 m (int8 dBm) | same |
-| 23 | transmit power (int8 dBm, −12…9) | same |
+| 23 | transmit power (int8 dBm, −12…21; rounded to the nearest level the chip supports: up to +21 on C3/S3, +20 on C6/H2, +9 on ESP32) | same |
 | 24–25 | advertising interval (uint16 little-endian, ms, 100…10000) | same |
 
 After a write the beacon restarts with the new settings.
 
-Defaults before setup: measured power −59 dBm, transmit power −3 dBm, interval 300 ms.
+Defaults before setup: measured power −59 dBm, transmit power +9 dBm, interval 300 ms. The setup signal always uses the chip's maximum power, so boards with weak antennas are still easy to find.
 
 ## Building
 
