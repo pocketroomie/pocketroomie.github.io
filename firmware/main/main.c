@@ -29,13 +29,14 @@
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
 
-#define FW_VERSION         2
+#define FW_VERSION         3
 #define SETUP_WINDOW_MS    (3 * 60 * 1000)   // configured beacons: setup is open this long after power-on
 #define SETUP_ADV_MS       160               // setup signal interval (quick to find)
 #define MIXED_SLOT_MS      500               // during the setup window: beacon / setup signals alternate this often
 #define RESTART_DELAY_MS   400               // after a change: time for the write response to go out
 #define ESPRESSIF_ID       0x02E5            // Bluetooth company ID used for the setup signal's status bytes
-#define RECORD_LEN         26
+#define RECORD_LEN         26                // what Roomie writes
+#define READ_LEN           28                // what Roomie reads: the record + restart report
 
 #define CMD_CONFIGURE      0x01
 #define CMD_RESET          0x02
@@ -72,6 +73,11 @@ static uint8_t own_addr_type;
 static char name[16];
 static struct ble_npl_callout slot_timer, window_timer, restart_timer;
 
+// Unexpected restarts (power dips, crashes, watchdog) since the previous power-on, reported in the setup
+// signal so Roomie can warn about them. 0 = none.
+static uint8_t reported_reason;
+static uint8_t reported_count;
+
 // MARK: Settings (NVS)
 
 static void load_config(void) {
@@ -95,6 +101,39 @@ static void erase_config(void) {
     nvs_handle_t h;
     if (nvs_open("roomie", NVS_READWRITE, &h) != ESP_OK) return;
     nvs_erase_key(h, "cfg");
+    nvs_commit(h);
+    nvs_close(h);
+}
+
+// MARK: Restarts
+
+/// Plugging in, the reset button, or our own restart after a settings change.
+static bool is_expected_reset(esp_reset_reason_t r) {
+    // 11 / 12: reset over USB or JTAG (e.g. right after flashing from the install page). Compared by
+    // value because older ESP-IDF releases don't name them.
+    return r == ESP_RST_POWERON || r == ESP_RST_SW || r == ESP_RST_EXT || r == ESP_RST_UNKNOWN
+        || (int)r == 11 || (int)r == 12;
+}
+
+/// Counts unexpected restarts in NVS. On a real power-on, the count since the previous one becomes
+/// this session's report and the count starts again.
+static void track_reset(esp_reset_reason_t r) {
+    nvs_handle_t h;
+    if (nvs_open("roomie", NVS_READWRITE, &h) != ESP_OK) return;
+    uint8_t reason = 0, count = 0;
+    nvs_get_u8(h, "rst_reason", &reason);
+    nvs_get_u8(h, "rst_count", &count);
+    if (!is_expected_reset(r)) {
+        reason = (uint8_t)r;
+        if (count < 255) count++;
+        nvs_set_u8(h, "rst_reason", reason);
+        nvs_set_u8(h, "rst_count", count);
+    } else if (r == ESP_RST_POWERON) {
+        reported_reason = reason;
+        reported_count = count;
+        nvs_erase_key(h, "rst_reason");
+        nvs_erase_key(h, "rst_count");
+    }
     nvs_commit(h);
     nvs_close(h);
 }
@@ -155,8 +194,13 @@ static int start_beacon_adv(void) {
 static int start_setup_adv(void) {
     // Status for Roomie's scan: configured flag, major, minor (iOS hides proximity-beacon packets from
     // normal Bluetooth scans, so this is how Roomie knows which beacon is which).
+    // Status byte: bit 0 configured, bits 1-4 last unexpected restart reason (capped at 15),
+    // bits 5-7 how many (capped at 7).
+    uint8_t flags = (cfg.configured ? 1 : 0)
+                  | ((reported_reason > 15 ? 15 : reported_reason) << 1)
+                  | ((reported_count > 7 ? 7 : reported_count) << 5);
     uint8_t status[7] = {
-        ESPRESSIF_ID & 0xFF, ESPRESSIF_ID >> 8, cfg.configured ? 1 : 0,
+        ESPRESSIF_ID & 0xFF, ESPRESSIF_ID >> 8, flags,
         cfg.major >> 8, cfg.major & 0xFF, cfg.minor >> 8, cfg.minor & 0xFF,
     };
     struct ble_hs_adv_fields f = {0};
@@ -238,6 +282,8 @@ static int gap_event(struct ble_gap_event *event, void *arg) {
 //   [22]     measured power at 1 m (int8, dBm)
 //   [23]     transmit power (int8, dBm; -12…21, rounded to the nearest level the chip has)
 //   [24..25] advertising interval (uint16, little-endian, ms; 100…10000)
+//   [26]     read only: last unexpected restart reason since the previous power-on (esp_reset_reason_t; 0 = none)
+//   [27]     read only: how many unexpected restarts
 // A reset needs only byte 0. After a write the beacon restarts with the new settings.
 
 static void fill_record(uint8_t *r) {
@@ -257,8 +303,10 @@ static void fill_record(uint8_t *r) {
 static int config_access(uint16_t conn_handle, uint16_t attr_handle,
                          struct ble_gatt_access_ctxt *ctxt, void *arg) {
     if (ctxt->op == BLE_GATT_ACCESS_OP_READ_CHR) {
-        uint8_t r[RECORD_LEN];
+        uint8_t r[READ_LEN];
         fill_record(r);
+        r[26] = reported_reason;
+        r[27] = reported_count;
         return os_mbuf_append(ctxt->om, r, sizeof r) == 0 ? 0 : BLE_ATT_ERR_INSUFFICIENT_RES;
     }
     if (ctxt->op != BLE_GATT_ACCESS_OP_WRITE_CHR) return BLE_ATT_ERR_UNLIKELY;
@@ -332,7 +380,13 @@ void app_main(void) {
         nvs_flash_init();
     }
     load_config();
-    mode = cfg.configured ? MODE_MIXED : MODE_SETUP;
+    esp_reset_reason_t reason = esp_reset_reason();
+    track_reset(reason);
+    // The setup window opens only when you plug the board in (or press reset, or after Roomie changed its
+    // settings). After a power dip or crash it goes straight back to being a beacon: otherwise a board that
+    // keeps restarting would advertise setup all the time.
+    if (!cfg.configured) mode = MODE_SETUP;
+    else mode = is_expected_reset(reason) ? MODE_MIXED : MODE_BEACON;
 
     uint8_t mac[6];
     esp_read_mac(mac, ESP_MAC_BT);

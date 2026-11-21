@@ -13,8 +13,10 @@ plus a one-click web installer.
    (the last 4 hex digits of its Bluetooth address).
 3. In Roomie, pick the beacon and the room. Roomie writes its settings over Bluetooth; the beacon
    saves them and restarts as a room beacon.
-4. To change a beacon later, power-cycle it: for **3 minutes** after power-on it accepts changes
+4. To change a beacon later, power-cycle it: for **3 minutes** after it's plugged in (or after its reset button, or after Roomie changed it) it accepts changes
    (alternating between the beacon signal and the setup signal), then it's a beacon only.
+
+Unexpected restarts (a power dip at high transmit power, a crash) don't open the setup window; the board counts them and reports them in its setup signal the next time it's plugged in, so Roomie can warn about a weak charger.
 
 There is no PIN: being able to unplug the beacon is the protection. Re-flashing with "erase" (or
 Roomie's "Reset beacon") returns it to unconfigured.
@@ -33,10 +35,10 @@ chip can always be found again for re-flashing. Roughly 20–25 mA on an ESP32-C
 | Config characteristic (read / write) | `9194e05c-5fdc-4b80-98f5-d9c4655a1d40` |
 
 Setup advertisement: the service UUID above, the name `Roomie-XXXX` (scan response), and
-manufacturer data (company `0x02E5`): `[configured, major_hi, major_lo, minor_hi, minor_lo]`.
+manufacturer data (company `0x02E5`): `[status, major_hi, major_lo, minor_hi, minor_lo]`, where status bit 0 = configured, bits 1–4 = reason of the last unexpected restart since the previous power-on (`esp_reset_reason_t`, capped at 15; 9 = brownout), bits 5–7 = how many (capped at 7).
 (iOS hides proximity-beacon packets from Core Bluetooth scans, so this is how the app tells beacons apart.)
 
-Config record (26 bytes, same layout for read and write):
+Config record (26 bytes written; 28 read, with a restart report at the end):
 
 | Bytes | Read | Write |
 |---|---|---|
@@ -48,6 +50,8 @@ Config record (26 bytes, same layout for read and write):
 | 22 | measured power at 1 m (int8 dBm) | same |
 | 23 | transmit power (int8 dBm, −12…21; rounded to the nearest level the chip supports: up to +21 on C3/S3, +20 on C6/H2, +9 on ESP32) | same |
 | 24–25 | advertising interval (uint16 little-endian, ms, 100…10000) | same |
+| 26 | last unexpected restart reason since the previous power-on (0 = none) | — |
+| 27 | number of unexpected restarts | — |
 
 After a write the beacon restarts with the new settings.
 
