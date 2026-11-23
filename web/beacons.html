@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roomie Beacon · Install</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="description" content="Turn any ESP32 into a room beacon for Roomie.">
+  <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #eef2ff;
+      background: radial-gradient(1200px 700px at 50% -10%, #1f4fd8 0%, #0b1a4a 45%, #050b22 100%);
+      display: flex; justify-content: center; padding: 48px 20px;
+    }
+    main { width: 100%; max-width: 620px; }
+    h1 { font-size: 34px; margin: 0 0 6px; letter-spacing: -0.5px; }
+    .lead { color: #b9c6ff; margin: 0 0 32px; }
+    .card {
+      background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px; padding: 24px; margin-bottom: 18px; backdrop-filter: blur(12px);
+    }
+    ol { margin: 0; padding-left: 22px; }
+    li { margin: 6px 0; }
+    .install { text-align: center; padding: 30px 24px; }
+    esp-web-install-button button, .fallback {
+      font: 600 17px/1 inherit; color: #0b1a4a; background: #fff; border: 0;
+      border-radius: 999px; padding: 15px 30px; cursor: pointer;
+    }
+    .note { color: #9fb0ee; font-size: 14px; }
+    code { background: rgba(255, 255, 255, 0.1); padding: 1px 6px; border-radius: 6px; }
+    a { color: #c7d3ff; }
+  </style>
+</head>
+<body>
+<main>
+  <p class="note" style="margin:0 0 18px"><a href="./">← Roomie</a></p>
+  <h1>Roomie Beacon</h1>
+  <p class="lead">Turn any ESP32 into a room beacon for the Roomie app. One click, no settings to type.</p>
+
+  <div class="card install">
+    <esp-web-install-button manifest="manifest.json">
+      <button slot="activate">Install Roomie Beacon</button>
+      <span slot="unsupported">
+        This browser can't talk to USB devices. Open this page in <b>Chrome</b> or <b>Edge</b> on a computer.
+      </span>
+      <span slot="not-allowed">This page needs to be opened over HTTPS.</span>
+    </esp-web-install-button>
+    <p class="note">Works with ESP32, ESP32-C3, ESP32-S3, ESP32-C6 and ESP32-H2. The chip is detected automatically.</p>
+  </div>
+
+  <div class="card">
+    <ol>
+      <li>Plug the ESP32 into this computer with a USB cable that carries data (some cables only charge).</li>
+      <li>Click <b>Install Roomie Beacon</b>, pick the board in the list and confirm. Choosing <b>erase</b> wipes any previous setup.</li>
+      <li>Plug the beacon in where it will live, roughly in the middle of the room.</li>
+      <li>On your iPhone, open <b>Roomie → Settings → Auto Setup</b>, turn on <b>Use Room Beacons</b>, open <b>Room Beacons</b> and tap the new beacon (it appears as <code>Roomie-XXXX</code>) to pick its room.</li>
+    </ol>
+  </div>
+
+  <div class="card note">
+    <p style="margin-top:0"><b>Board not found?</b> Hold the <b>BOOT</b> button while plugging it in, then click Install again.</p>
+    <p><b>Changing a beacon later:</b> unplug it and plug it back in. For 3 minutes it accepts changes from Roomie, then it's a plain beacon again.</p>
+    <p style="margin-bottom:0">The firmware uses Bluetooth only (no Wi-Fi) and stores nothing but its beacon settings. Source: <a href="https://github.com/roomiehome/roomiehome">github.com/roomiehome/roomiehome</a> · <a href="privacy.html">Privacy Policy</a>.</p>
+  </div>
+</main>
+</body>
+</html>

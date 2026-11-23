@@ -3,7 +3,7 @@
 Firmware that turns any ESP32 into a Bluetooth room beacon for the **Roomie** iOS app,
 plus a one-click web installer.
 
-**Install:** https://roomiehome.github.io/roomiehome/ (Chrome or Edge on a computer).
+**Install:** https://roomiehome.github.io/roomiehome/beacons.html (Chrome or Edge on a computer). About Roomie: https://roomiehome.github.io/roomiehome/
 
 ## How it works
 

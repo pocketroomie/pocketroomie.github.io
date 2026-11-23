@@ -3,68 +3,188 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Roomie Beacon · Install</title>
-  <meta name="description" content="Turn any ESP32 into a room beacon for Roomie.">
-  <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+  <title>Roomie · A lighter way to use your Apple Home</title>
+  <meta name="description" content="Roomie is a companion to Apple's Home app. It changes nothing in your setup: it opens on the room you're in, switches rooms in a swipe, and shows what's still on. Light, simple, quick.">
+  <meta property="og:title" content="Roomie · A lighter way to use your Apple Home">
+  <meta property="og:description" content="Works with the home you already set up. Opens on the room you're in, switches rooms in a swipe, shows what's still on.">
+  <meta property="og:image" content="icon-512.png">
+  <link rel="icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
-    :root { color-scheme: dark; }
+    :root {
+      color-scheme: dark;
+      --indigo: #423CCC; --deep: #1E1A5E; --night: #0D0B24;
+      --orange: #FF9500; --text: #F1F0FF; --soft: #C3C0F5; --line: rgba(255, 255, 255, 0.13);
+    }
     * { box-sizing: border-box; }
     body {
-      margin: 0; min-height: 100vh;
-      font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #eef2ff;
-      background: radial-gradient(1200px 700px at 50% -10%, #1f4fd8 0%, #0b1a4a 45%, #050b22 100%);
-      display: flex; justify-content: center; padding: 48px 20px;
+      margin: 0;
+      font: 18px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1100px 700px at 70% -10%, #5A54E6 0%, var(--indigo) 22%, var(--deep) 55%, var(--night) 100%) fixed;
     }
-    main { width: 100%; max-width: 620px; }
-    h1 { font-size: 34px; margin: 0 0 6px; letter-spacing: -0.5px; }
-    .lead { color: #b9c6ff; margin: 0 0 32px; }
-    .card {
-      background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 22px; padding: 24px; margin-bottom: 18px; backdrop-filter: blur(12px);
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 22px; }
+    a { color: #DCDAFF; }
+
+    /* Top */
+    header { display: flex; align-items: center; gap: 12px; padding: 22px 0; }
+    header img { width: 40px; height: 40px; border-radius: 9px; }
+    header b { font-size: 21px; letter-spacing: -0.3px; }
+
+    /* Hero */
+    .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; padding: 40px 0 70px; }
+    .tag { display: inline-block; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; color: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; margin-bottom: 20px; }
+    h1 { font-size: clamp(38px, 6vw, 60px); line-height: 1.05; letter-spacing: -1.5px; margin: 0 0 20px; }
+    h1 span { color: var(--orange); }
+    .lead { font-size: 21px; color: var(--soft); margin: 0 0 30px; max-width: 34em; }
+    .store {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-weight: 600; font-size: 17px; color: var(--night); background: #fff;
+      border-radius: 999px; padding: 15px 28px; text-decoration: none;
     }
-    ol { margin: 0; padding-left: 22px; }
-    li { margin: 6px 0; }
-    .install { text-align: center; padding: 30px 24px; }
-    esp-web-install-button button, .fallback {
-      font: 600 17px/1 inherit; color: #0b1a4a; background: #fff; border: 0;
-      border-radius: 999px; padding: 15px 30px; cursor: pointer;
+    .store small { font-weight: 500; color: #5b5a72; }
+    .needs { margin-top: 16px; font-size: 15px; color: var(--soft); }
+
+    /* Phone illustration */
+    .phone {
+      justify-self: center; width: 290px; padding: 16px 14px 22px; border-radius: 46px;
+      background: linear-gradient(180deg, #1B1847, #0F0D2C); border: 1px solid var(--line);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45), inset 0 0 0 7px #08071a;
     }
-    .note { color: #9fb0ee; font-size: 14px; }
-    code { background: rgba(255, 255, 255, 0.1); padding: 1px 6px; border-radius: 6px; }
-    a { color: #c7d3ff; }
+    .notch { width: 92px; height: 26px; border-radius: 20px; background: #000; margin: 4px auto 16px; }
+    .phone h3 { margin: 0 8px 4px; font-size: 25px; letter-spacing: -0.4px; }
+    .phone .here { margin: 0 8px 14px; font-size: 13px; color: var(--soft); }
+    .chips { display: flex; gap: 6px; margin: 0 6px 16px; overflow: hidden; }
+    .chip { font-size: 12px; padding: 6px 11px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); white-space: nowrap; }
+    .chip.on { background: #6E68F0; font-weight: 600; }
+    .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 6px; }
+    .tile { border-radius: 20px; padding: 13px; min-height: 92px; background: rgba(255, 255, 255, 0.09); display: flex; flex-direction: column; justify-content: space-between; }
+    .tile svg { width: 26px; height: 26px; }
+    .tile b { display: block; font-size: 14px; }
+    .tile i { font-style: normal; font-size: 12px; color: var(--soft); }
+    .tile.lit { background: #FFF6E5; color: #2A2105; }
+    .tile.lit i { color: #7A5A10; }
+
+    /* Three ideas */
+    .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding-bottom: 70px; }
+    .idea { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 28px; padding: 30px 26px; }
+    .num { font-size: 14px; font-weight: 700; color: var(--orange); letter-spacing: 1px; }
+    .idea svg { width: 46px; height: 46px; margin: 16px 0 12px; }
+    .idea h2 { font-size: 24px; line-height: 1.2; letter-spacing: -0.4px; margin: 0 0 10px; }
+    .idea p { margin: 0; color: var(--soft); }
+
+    /* Reassurance */
+    .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 34px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .fact b { display: block; font-size: 18px; margin-bottom: 4px; }
+    .fact span { color: var(--soft); font-size: 16px; }
+
+    /* Optional beacons */
+    .extra { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; margin: 60px 0; padding: 28px 30px; border-radius: 28px; background: rgba(0, 0, 0, 0.22); border: 1px solid var(--line); }
+    .extra svg { width: 54px; height: 54px; }
+    .extra h2 { margin: 0 0 6px; font-size: 21px; }
+    .extra p { margin: 0; color: var(--soft); font-size: 16px; }
+    .button { display: inline-block; white-space: nowrap; font-weight: 600; font-size: 16px; color: var(--text); text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 999px; padding: 12px 22px; }
+
+    footer { padding: 10px 0 50px; font-size: 14px; color: #A9A6DA; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 12px; }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 44px; padding-top: 20px; text-align: center; }
+      .lead { margin-left: auto; margin-right: auto; }
+      .three, .facts { grid-template-columns: 1fr; }
+      .extra { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+    }
   </style>
 </head>
 <body>
-<main>
-  <h1>Roomie Beacon</h1>
-  <p class="lead">Turn any ESP32 into a room beacon for the Roomie app. One click, no settings to type.</p>
+<div class="wrap">
+  <header>
+    <img src="apple-touch-icon.png" alt="">
+    <b>Roomie</b>
+  </header>
 
-  <div class="card install">
-    <esp-web-install-button manifest="manifest.json">
-      <button slot="activate">Install Roomie Beacon</button>
-      <span slot="unsupported">
-        This browser can't talk to USB devices. Open this page in <b>Chrome</b> or <b>Edge</b> on a computer.
-      </span>
-      <span slot="not-allowed">This page needs to be opened over HTTPS.</span>
-    </esp-web-install-button>
-    <p class="note">Works with ESP32, ESP32-C3, ESP32-S3, ESP32-C6 and ESP32-H2. The chip is detected automatically.</p>
-  </div>
+  <section class="hero">
+    <div>
+      <div class="tag">Light · Simple · Quick</div>
+      <h1>Your Apple Home,<br><span>one room at a time.</span></h1>
+      <p class="lead">Roomie is a companion to Apple's Home app. It doesn't change anything: it uses the lights and devices you've already set up, and simply shows you the room you're in, so a lamp is always one tap away.</p>
+      <a class="store" href="#" aria-disabled="true" onclick="return false">
+        <svg width="18" height="22" viewBox="0 0 18 22" aria-hidden="true"><path fill="currentColor" d="M14.9 11.7c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9C4.4 5.8 2.8 6.9 1.9 8.5.1 11.7 1.4 16.4 3.2 19c.9 1.3 1.9 2.7 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.6 1-1.5 1.4-2.9 1.4-3-.1 0-2.7-1-2.7-4.3zM12.4 4c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.2 1.1.1 2.3-.6 3-1.5z"/></svg>
+        Coming soon <small>on the App Store</small>
+      </a>
+      <p class="needs">You need an iPhone and lights or devices already set up in Apple's Home app.</p>
+    </div>
 
-  <div class="card">
-    <ol>
-      <li>Plug the ESP32 into this computer with a USB cable that carries data (some cables only charge).</li>
-      <li>Click <b>Install Roomie Beacon</b>, pick the board in the list and confirm. Choosing <b>erase</b> wipes any previous setup.</li>
-      <li>Plug the beacon in where it will live, roughly in the middle of the room.</li>
-      <li>On your iPhone, open <b>Roomie → Settings → Room Beacons → Add Beacon</b> and pick the room. It appears as <code>Roomie-XXXX</code>.</li>
-    </ol>
-  </div>
+    <div class="phone" role="img" aria-label="Roomie on an iPhone, showing the Living Room: two lamps on, the blinds half open and the TV off.">
+      <div class="notch"></div>
+      <h3>Living Room</h3>
+      <p class="here">● You're here</p>
+      <div class="chips"><span class="chip">What's On</span><span class="chip">Kitchen</span><span class="chip on">Living Room</span><span class="chip">Bedroom</span></div>
+      <div class="tiles">
+        <div class="tile lit">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF9500" d="M12 2a7 7 0 0 0-4 12.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3A7 7 0 0 0 12 2zm-2 18h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2z"/></svg>
+          <div><b>Ceiling Light</b><i>On · 80%</i></div>
+        </div>
+        <div class="tile lit">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF9500" d="M8 2h8l3 9H5l3-9zm3 10h2v8h3v2H8v-2h3v-8z"/></svg>
+          <div><b>Floor Lamp</b><i>On</i></div>
+        </div>
+        <div class="tile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#C3C0F5" d="M3 3h18v2H3zm2 3h14v2H5zm0 3h14v2H5zm6 3h2v7h-2z"/></svg>
+          <div><b>Blinds</b><i>60% open</i></div>
+        </div>
+        <div class="tile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#C3C0F5" d="M3 5h18a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm5 14h8v2H8z"/></svg>
+          <div><b>TV</b><i>Off</i></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div class="card note">
-    <p style="margin-top:0"><b>Board not found?</b> Hold the <b>BOOT</b> button while plugging it in, then click Install again.</p>
-    <p><b>Changing a beacon later:</b> unplug it and plug it back in. For 3 minutes it accepts changes from Roomie, then it's a plain beacon again.</p>
-    <p style="margin-bottom:0">The firmware uses Bluetooth only (no Wi-Fi) and stores nothing but its beacon settings. Source: <a href="https://github.com/roomiehome/roomiehome">github.com/roomiehome/roomiehome</a> · <a href="privacy.html">Privacy Policy</a>.</p>
-  </div>
-</main>
+  <section class="three" aria-label="What Roomie does">
+    <article class="idea">
+      <div class="num">1</div>
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4c-7.7 0-14 6.1-14 13.7C10 28 24 44 24 44s14-16 14-26.3C38 10.1 31.7 4 24 4z" fill="#FF9500"/><circle cx="24" cy="18" r="5.5" fill="#1E1A5E"/></svg>
+      <h2>It knows the room you're in</h2>
+      <p>Open Roomie and it's already on the right room: just its lamps, blinds and fans, big and easy to tap. Walk through your home once so it learns your rooms, and it follows you from there.</p>
+    </article>
+    <article class="idea">
+      <div class="num">2</div>
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="4" fill="none" stroke="#FF9500" stroke-width="3.5"/><path d="M24 9v30M24 24h19" stroke="#FF9500" stroke-width="2.5"/><rect x="26" y="11" width="15" height="11" rx="1.5" fill="#FF9500"/><path d="M13 21l-4 3 4 3" fill="none" stroke="#FF9500" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h2>Another room in a swipe</h2>
+      <p>Swipe sideways for the next room, or in from the edge for your favorites. Or press the iPhone's Action button and Roomie opens right where you need it.</p>
+    </article>
+    <article class="idea">
+      <div class="num">3</div>
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6a12 12 0 0 0-7 21.7V32a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.3A12 12 0 0 0 24 6z" fill="#FF9500"/><rect x="19" y="37" width="10" height="4" rx="2" fill="#FF9500"/><path d="M24 1v2M7 9l1.5 1.5M41 9l-1.5 1.5M2 22h2M44 22h2" stroke="#FF9500" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <h2>See what's still on</h2>
+      <p>Going to bed or leaving the house? <b>What's On</b> lists every light and device left on, anywhere at home, and turns them all off with one tap.</p>
+    </article>
+  </section>
+
+  <section class="facts" aria-label="Good to know">
+    <div class="fact"><b>Changes nothing</b><span>Your rooms, accessories and automations stay exactly as they are in the Home app. Roomie just gives them a lighter, quicker face.</span></div>
+    <div class="fact"><b>Nothing to set up</b><span>No accounts, no new hubs, nothing to install around the house. If it's in the Home app, it's in Roomie.</span></div>
+    <div class="fact"><b>Private</b><span>No ads, no tracking, no data collected. Everything stays on your iPhone.</span></div>
+  </section>
+
+  <section class="extra">
+    <svg viewBox="0 0 54 54" aria-hidden="true"><rect x="17" y="20" width="20" height="26" rx="5" fill="none" stroke="#C3C0F5" stroke-width="3"/><circle cx="27" cy="33" r="3.5" fill="#FF9500"/><path d="M15 14a17 17 0 0 1 24 0M10 8a25 25 0 0 1 34 0" fill="none" stroke="#C3C0F5" stroke-width="3" stroke-linecap="round"/></svg>
+    <div>
+      <h2>For the handy one at home: room beacons</h2>
+      <p>Optional. A small, inexpensive board plugged into a socket makes room detection even more precise. Set one up from your computer in a couple of minutes, with no settings to type.</p>
+    </div>
+    <a class="button" href="beacons.html">Set up a beacon</a>
+  </section>
+
+  <footer>
+    <nav>
+      <a href="beacons.html">Room beacon installer</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="https://github.com/roomiehome/roomiehome/issues">Support</a>
+    </nav>
+    Roomie is an independent app, not made by Apple. Apple, iPhone and HomeKit are trademarks of Apple Inc.
+  </footer>
+</div>
 </body>
 </html>
