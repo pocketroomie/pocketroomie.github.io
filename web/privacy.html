@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+<!-- Icons: Lucide (ISC License, © Lucide Contributors, portions © Cole Bemis as part of Feather, MIT). -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,33 +9,57 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="description" content="Roomie's privacy policy: Roomie collects no data. Everything stays on your iPhone.">
   <style>
-    :root { color-scheme: dark; }
+    :root {
+      color-scheme: dark;
+      --indigo: #423CCC; --deep: #1E1A5E; --night: #0D0B24;
+      --orange: #FF9500; --text: #F1F0FF; --soft: #C3C0F5; --line: rgba(255, 255, 255, 0.13);
+    }
     * { box-sizing: border-box; }
     body {
-      margin: 0; min-height: 100vh;
-      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #eef2ff;
-      background: radial-gradient(1200px 700px at 50% -10%, #1f4fd8 0%, #0b1a4a 45%, #050b22 100%);
-      display: flex; justify-content: center; padding: 48px 20px;
+      margin: 0;
+      font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1100px 700px at 70% -10%, #5A54E6 0%, var(--indigo) 22%, var(--deep) 55%, var(--night) 100%) fixed;
     }
-    main { width: 100%; max-width: 680px; }
-    h1 { font-size: 34px; margin: 0 0 4px; letter-spacing: -0.5px; }
-    h2 { font-size: 20px; margin: 28px 0 8px; }
-    .lead { color: #b9c6ff; margin: 0 0 28px; }
-    .card {
-      background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 22px; padding: 8px 24px 20px; margin-bottom: 18px;
-    }
-    .summary { font-size: 18px; padding: 20px 24px; }
-    a { color: #c7d3ff; }
-    li { margin: 6px 0; }
-    .note { color: #9fb0ee; font-size: 14px; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+    a { color: #DCDAFF; }
+
+    header { display: flex; align-items: center; gap: 12px; padding: 22px 0; }
+    header a { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+    header img { width: 40px; height: 40px; border-radius: 9px; }
+    header b { font-size: 21px; letter-spacing: -0.3px; }
+
+    .hero { padding: 34px 0 26px; }
+    .ic { width: 48px; height: 48px; color: var(--orange); margin-bottom: 16px; }
+    h1 { font-size: clamp(36px, 6vw, 52px); line-height: 1.08; letter-spacing: -1.2px; margin: 0 0 12px; }
+    .lead { font-size: 18px; color: var(--soft); margin: 0; }
+
+    .card { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 28px; padding: 30px 28px; margin-bottom: 20px; }
+    .summary { font-size: 20px; line-height: 1.5; }
+    .summary b { color: var(--orange); }
+    h2 { font-size: 22px; letter-spacing: -0.3px; margin: 30px 0 10px; }
+    h2:first-child { margin-top: 0; }
+    .card p, .card li { color: var(--soft); }
+    .card b, .card i { color: var(--text); }
+    ul { margin: 0; padding-left: 22px; }
+    li { margin: 8px 0; }
+    p { margin: 0 0 12px; }
+
+    footer { padding: 26px 0 50px; font-size: 14px; color: #A9A6DA; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 12px; }
   </style>
 </head>
 <body>
-<main>
-  <h1>Privacy Policy</h1>
-  <p class="lead">Roomie, for iPhone · Last updated November 23, 2026</p>
+<div class="wrap">
+  <header>
+    <a href="./"><img src="apple-touch-icon.png" alt=""><b>Roomie</b></a>
+  </header>
+
+  <section class="hero">
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <h1>Privacy Policy</h1>
+    <p class="lead">Roomie, for iPhone · Last updated November 23, 2026</p>
+  </section>
 
   <div class="card summary">
     <b>Roomie collects no data.</b> Everything it uses stays on your iPhone. Roomie has no accounts, no
@@ -75,7 +100,14 @@
       <a href="https://github.com/roomiehome/roomiehome/issues">github.com/roomiehome/roomiehome/issues</a>.</p>
   </div>
 
-  <p class="note"><a href="./">Roomie</a> · <a href="beacons.html">Roomie Beacon installer</a></p>
-</main>
+  <footer>
+    <nav>
+      <a href="./">Roomie</a>
+      <a href="beacons.html">Room beacon installer</a>
+      <a href="https://github.com/roomiehome/roomiehome/issues">Support</a>
+    </nav>
+    Icons: <a href="https://lucide.dev">Lucide</a> (ISC).
+  </footer>
+</div>
 </body>
 </html>

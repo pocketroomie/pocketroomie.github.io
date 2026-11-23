@@ -1,5 +1,7 @@
 <!doctype html>
 <html lang="en">
+<!-- Icons: Lucide (ISC License, © Lucide Contributors, portions © Cole Bemis as part of Feather, MIT) and
+     Tabler Icons (MIT License, © Paweł Kuna). -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -68,8 +70,7 @@
     /* Three ideas */
     .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding-bottom: 70px; }
     .idea { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 28px; padding: 30px 26px; }
-    .num { font-size: 14px; font-weight: 700; color: var(--orange); letter-spacing: 1px; }
-    .idea svg { width: 46px; height: 46px; margin: 16px 0 12px; }
+    .ic { width: 44px; height: 44px; color: var(--orange); margin-bottom: 14px; }
     .idea h2 { font-size: 24px; line-height: 1.2; letter-spacing: -0.4px; margin: 0 0 10px; }
     .idea p { margin: 0; color: var(--soft); }
 
@@ -78,11 +79,15 @@
     .fact b { display: block; font-size: 18px; margin-bottom: 4px; }
     .fact span { color: var(--soft); font-size: 16px; }
 
-    /* Optional beacons */
-    .extra { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; margin: 60px 0; padding: 28px 30px; border-radius: 28px; background: rgba(0, 0, 0, 0.22); border: 1px solid var(--line); }
-    .extra svg { width: 54px; height: 54px; }
-    .extra h2 { margin: 0 0 6px; font-size: 21px; }
-    .extra p { margin: 0; color: var(--soft); font-size: 16px; }
+    /* Beacons (optional) */
+    .more { margin: 64px 0; }
+    .more h2 { font-size: 30px; letter-spacing: -0.6px; margin: 0 0 10px; }
+    .more .why { color: var(--soft); max-width: 46em; margin: 0 0 26px; }
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .option { display: flex; flex-direction: column; align-items: flex-start; padding: 28px 26px; border-radius: 28px; background: rgba(0, 0, 0, 0.22); border: 1px solid var(--line); }
+    .option h3 { margin: 0 0 8px; font-size: 21px; }
+    .option p { margin: 0 0 20px; color: var(--soft); font-size: 16px; flex: 1; }
+    .option .ic { color: var(--soft); }
     .button { display: inline-block; white-space: nowrap; font-weight: 600; font-size: 16px; color: var(--text); text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 999px; padding: 12px 22px; }
 
     footer { padding: 10px 0 50px; font-size: 14px; color: #A9A6DA; }
@@ -92,7 +97,7 @@
       .hero { grid-template-columns: 1fr; gap: 44px; padding-top: 20px; text-align: center; }
       .lead { margin-left: auto; margin-right: auto; }
       .three, .facts { grid-template-columns: 1fr; }
-      .extra { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+      .options { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -143,20 +148,17 @@
 
   <section class="three" aria-label="What Roomie does">
     <article class="idea">
-      <div class="num">1</div>
-      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4c-7.7 0-14 6.1-14 13.7C10 28 24 44 24 44s14-16 14-26.3C38 10.1 31.7 4 24 4z" fill="#FF9500"/><circle cx="24" cy="18" r="5.5" fill="#1E1A5E"/></svg>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
       <h2>It knows the room you're in</h2>
       <p>Open Roomie and it's already on the right room: just its lamps, blinds and fans, big and easy to tap. Walk through your home once so it learns your rooms, and it follows you from there.</p>
     </article>
     <article class="idea">
-      <div class="num">2</div>
-      <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="4" fill="none" stroke="#FF9500" stroke-width="3.5"/><path d="M24 9v30M24 24h19" stroke="#FF9500" stroke-width="2.5"/><rect x="26" y="11" width="15" height="11" rx="1.5" fill="#FF9500"/><path d="M13 21l-4 3 4 3" fill="none" stroke="#FF9500" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5"/><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47"/><path d="M2.541 5.594a13.487 13.487 0 0 1 2.46 -1.427"/><path d="M14 3.458c1.32 .354 2.558 .902 3.685 1.612"/></svg>
       <h2>Another room in a swipe</h2>
-      <p>Swipe sideways for the next room, or in from the edge for your favorites. Or press the iPhone's Action button and Roomie opens right where you need it.</p>
+      <p>Swipe in from the edge of the screen and your favorite rooms appear right under your thumb: slide onto one and you're there, with one hand, from either side. Or press the iPhone's Action button to open Roomie where you need it.</p>
     </article>
     <article class="idea">
-      <div class="num">3</div>
-      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6a12 12 0 0 0-7 21.7V32a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.3A12 12 0 0 0 24 6z" fill="#FF9500"/><rect x="19" y="37" width="10" height="4" rx="2" fill="#FF9500"/><path d="M24 1v2M7 9l1.5 1.5M41 9l-1.5 1.5M2 22h2M44 22h2" stroke="#FF9500" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
       <h2>See what's still on</h2>
       <p>Going to bed or leaving the house? <b>What's On</b> lists every light and device left on, anywhere at home, and turns them all off with one tap.</p>
     </article>
@@ -168,13 +170,22 @@
     <div class="fact"><b>Private</b><span>No ads, no tracking, no data collected. Everything stays on your iPhone.</span></div>
   </section>
 
-  <section class="extra">
-    <svg viewBox="0 0 54 54" aria-hidden="true"><rect x="17" y="20" width="20" height="26" rx="5" fill="none" stroke="#C3C0F5" stroke-width="3"/><circle cx="27" cy="33" r="3.5" fill="#FF9500"/><path d="M15 14a17 17 0 0 1 24 0M10 8a25 25 0 0 1 34 0" fill="none" stroke="#C3C0F5" stroke-width="3" stroke-linecap="round"/></svg>
-    <div>
-      <h2>For the handy one at home: room beacons</h2>
-      <p>Optional. A small, inexpensive board plugged into a socket makes room detection even more precise. Set one up from your computer in a couple of minutes, with no settings to type.</p>
+  <section class="more">
+    <h2>Even more precise, if you like</h2>
+    <p class="why">Roomie learns your rooms from the devices you already have. But rooms next to each other, or open to each other like a kitchen and a living room, can look alike. A small beacon in one of them tells Roomie exactly which side of the doorway you're on, and keeps teaching it your rooms as your home changes. Completely optional.</p>
+    <div class="options">
+      <div class="option">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9"/><path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5"/><circle cx="12" cy="9" r="2"/><path d="M16.2 4.8c2 2 2.26 5.11.8 7.47"/><path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1"/><path d="M9.5 18h5"/><path d="m8 22 4-11 4 11"/></svg>
+        <h3>Add beacons</h3>
+        <p>Any Bluetooth beacon you can buy works, from any brand. Put it in the room and pick its room in Roomie. That's it.</p>
+      </div>
+      <div class="option">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+        <h3>Or build your own</h3>
+        <p>Got an ESP32 board, or happy to buy an inexpensive one? Install Roomie's free beacon software from your computer in a couple of minutes, with no settings to type.</p>
+        <a class="button" href="beacons.html">Set up an ESP32</a>
+      </div>
     </div>
-    <a class="button" href="beacons.html">Set up a beacon</a>
   </section>
 
   <footer>
@@ -183,7 +194,8 @@
       <a href="privacy.html">Privacy Policy</a>
       <a href="https://github.com/roomiehome/roomiehome/issues">Support</a>
     </nav>
-    Roomie is an independent app, not made by Apple. Apple, iPhone and HomeKit are trademarks of Apple Inc.
+    Roomie is an independent app, not made by Apple. Apple, iPhone and HomeKit are trademarks of Apple Inc.<br>
+    Icons: <a href="https://lucide.dev">Lucide</a> (ISC) and <a href="https://tabler.io/icons">Tabler Icons</a> (MIT).
   </footer>
 </div>
 </body>
