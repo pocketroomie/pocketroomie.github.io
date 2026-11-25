@@ -4,10 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Roomie · Privacy Policy</title>
+  <title>Pocket Roomie · Privacy Policy</title>
   <link rel="icon" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta name="description" content="Roomie's privacy policy: Roomie collects no data. Everything stays on your iPhone.">
+  <meta name="description" content="Pocket Roomie's privacy policy: the app collects no data. Everything stays on your iPhone.">
   <style>
     :root {
       color-scheme: dark;
@@ -45,6 +45,11 @@
     li { margin: 8px 0; }
     p { margin: 0 0 12px; }
 
+    .card h3 { font-size: 18px; margin: 20px 0 6px; color: var(--text); }
+    .card h3:first-child { margin-top: 0; }
+    .note { font-size: 15px; color: var(--soft); }
+    .caps { text-transform: uppercase; font-size: 15px; letter-spacing: 0.1px; }
+    code { background: rgba(255,255,255,0.1); padding: 1px 7px; border-radius: 6px; font-size: 0.9em; }
     footer { padding: 26px 0 50px; font-size: 14px; color: #A9A6DA; }
     footer nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 12px; }
   </style>
@@ -52,61 +57,110 @@
 <body>
 <div class="wrap">
   <header>
-    <a href="./"><img src="apple-touch-icon.png" alt=""><b>Roomie</b></a>
+    <a href="./"><img src="apple-touch-icon.png" alt=""><b>Pocket Roomie</b></a>
   </header>
 
   <section class="hero">
     <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
     <h1>Privacy Policy</h1>
-    <p class="lead">Roomie, for iPhone · Last updated November 23, 2026</p>
+    <p class="lead">Pocket Roomie, the room beacon firmware and this website · Last updated November 25, 2026</p>
   </section>
 
   <div class="card summary">
-    <b>Roomie collects no data.</b> Everything it uses stays on your iPhone. Roomie has no accounts, no
-    analytics, no advertising and no tracking, and it doesn't send anything to us or to anyone else.
+    <b>Pocket Roomie doesn't collect your data.</b> The app has no accounts, no analytics, no advertising, no tracking
+    and no network connection of its own. What it learns about your home stays on your iPhone, and nothing is
+    sent to the developers or to anyone else.
   </div>
 
   <div class="card">
-    <h2>What Roomie uses, and why</h2>
+    <h2>Who this covers</h2>
+    <p>This policy covers (1) the Pocket Roomie app, (2) the optional Pocket Roomie beacon firmware for ESP32 boards, and
+      (3) this website. "We" means the developers of Pocket Roomie (the <i>Pocket Roomie</i> project). You can reach us
+      through the link under "Contact" below.</p>
+
+    <h2>The Pocket Roomie app</h2>
+    <h3>What it uses, and why</h3>
     <ul>
-      <li><b>Your Home (HomeKit):</b> to show and control the accessories you set up in Apple's Home app,
-        room by room. Roomie reads and controls them directly on your iPhone through HomeKit. HomeKit data
-        is never used for advertising or shared with anyone.</li>
-      <li><b>Bluetooth:</b> only in Auto mode. Roomie measures the signal of
-        nearby devices to tell which room you're in, and sets up Roomie beacons. The measurements stay on
+      <li><b>Your Home (HomeKit):</b> to show and control the accessories you set up in Apple's Home app, room by
+        room. Pocket Roomie talks to HomeKit directly on your iPhone. HomeKit information is never used for advertising,
+        and never leaves your iPhone through Pocket Roomie.</li>
+      <li><b>Bluetooth:</b> only in Auto mode, and when you set up room beacons. Pocket Roomie measures the signal strength
+        and advertising patterns of Bluetooth devices around you to recognize which room you are in. This is
+        processed on your iPhone only. Pocket Roomie does not try to identify people or what the devices are.</li>
+      <li><b>Location (While Using):</b> only if you turn on room beacons in Auto mode, because iOS detects beacons
+        through Location Services. Pocket Roomie does not read or store your coordinates, and it does not run in the
+        background.</li>
+    </ul>
+    <h3>What it saves on your iPhone</h3>
+    <ul>
+      <li>Your settings: detection mode, favorite rooms, hidden accessories, icon choices, switching speed.</li>
+      <li>A copy of the names, rooms and last known states of your accessories, so Pocket Roomie opens quickly.</li>
+      <li>What Pocket Roomie learned about each room: Bluetooth "fingerprints" (signal patterns, not names) and which
+        beacon belongs to which room.</li>
+      <li>Optional Scan Lab recordings, if you make any: nearby Bluetooth advertising data, saved as files on
         your iPhone.</li>
-      <li><b>Location (While Using):</b> only if you turn on room beacons in Auto mode, because iOS detects beacons through
-        Location Services. Roomie doesn't use your location or GPS, and it doesn't run in the background.</li>
+    </ul>
+    <p>All of this is stored only on your iPhone. It may be included in your device backups (for example iCloud
+      Backup or a computer backup), under your own Apple account's settings and Apple's terms. Deleting Pocket Roomie, or
+      using <i>Settings &rarr; About &rarr; Reset All Pocket Roomie Data</i>, removes it from the iPhone.</p>
+    <h3>Sharing is always your choice</h3>
+    <p>Pocket Roomie never uploads anything. If you export or share a Scan Lab file, it goes only where you send it.
+      Such a file can contain identifiers of Bluetooth devices around you, some of which belong to other people,
+      so share it carefully.</p>
+    <h3>Apple's services</h3>
+    <p>HomeKit, iCloud, backups, Siri, Shortcuts and the App Store are provided by Apple under Apple's own terms
+      and privacy policy. We don't receive information from them about you.</p>
+
+    <h2>The room beacon firmware</h2>
+    <p>The optional firmware for ESP32 boards uses Bluetooth only. It has no Wi-Fi or internet connection, and
+      stores nothing but its own beacon settings (its identifiers, transmit power and name). It collects no data.</p>
+
+    <h2>This website</h2>
+    <ul>
+      <li>No cookies, no analytics, no advertising, no trackers, and no fonts or scripts loaded from other sites.
+        Everything the page uses, including the installer, is served from this site.</li>
+      <li>The site is hosted on <b>GitHub Pages</b>. Like any web host, GitHub receives technical information
+        when you visit (such as your IP address, browser and the pages requested) and may keep server logs. We
+        don't receive or use that information. See
+        <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub's
+        Privacy Statement</a>.</li>
+      <li>The installer talks to your board over USB, from your browser, using your browser's Web Serial feature.
+        Your browser asks your permission first. Nothing about your board is sent to us.</li>
+      <li>Links to other sites (GitHub and others) are governed by those sites' own policies.</li>
     </ul>
 
-    <h2>What Roomie stores</h2>
-    <p>Your settings (detection mode, favorite rooms, hidden accessories), your rooms' Bluetooth fingerprints (what Roomie learned about each room) and
-      beacon assignments are saved on your iPhone only. Deleting Roomie, or using
-      <i>Settings → About → Reset All Roomie Data</i>, removes them.</p>
-
-    <h2>Roomie beacons</h2>
-    <p>The optional Roomie beacon firmware for ESP32 boards uses Bluetooth only. It has no Wi-Fi or internet
-      connection and stores nothing but its own beacon settings. The firmware and the installer page don't
-      collect any data.</p>
+    <h2>What we can't see, so can't share</h2>
+    <p>Because Pocket Roomie doesn't send data to us, we hold no personal data about you. That means there is nothing for
+      us to sell, share, disclose to authorities or lose in a data breach, and nothing for us to access, correct,
+      delete or export on request. The data on your iPhone is yours, and you control it with iOS and Pocket Roomie's
+      reset option. Whatever rights you have under your local law (for example the GDPR or CCPA) apply to the
+      parties that actually hold data, such as Apple and GitHub.</p>
 
     <h2>Children</h2>
-    <p>Roomie collects no data from anyone, including children.</p>
+    <p>Pocket Roomie doesn't collect personal data from anyone, including children. Pocket Roomie controls home accessories, so
+      it is meant for use by adults, or by children under adult supervision.</p>
 
     <h2>Changes</h2>
-    <p>If this policy ever changes, the new version will be published on this page with a new date.</p>
+    <p>If this policy changes, the new version will be published on this page with a new date. If a future version
+      of Pocket Roomie ever collected data, this policy would say so before that version was released.</p>
 
     <h2>Contact</h2>
     <p>Questions? Open an issue at
-      <a href="https://github.com/roomiehome/roomiehome/issues">github.com/roomiehome/roomiehome/issues</a>.</p>
+      <a href="https://github.com/pocketroomie/pocketroomie/issues">github.com/pocketroomie/pocketroomie/issues</a>.
+      Please don't post private information in a public issue.</p>
+    <p class="note">Last updated November 25, 2026.</p>
   </div>
 
   <footer>
     <nav>
-      <a href="./">Roomie</a>
-      <a href="beacons.html">Room beacon installer</a>
-      <a href="https://github.com/roomiehome/roomiehome/issues">Support</a>
+      <a href="./">Pocket Roomie</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="legal.html">Legal &amp; Credits</a>
+      <a href="https://github.com/pocketroomie/pocketroomie">Source code</a>
+      <a href="https://github.com/pocketroomie/pocketroomie/issues">Support</a>
     </nav>
-    Icons: <a href="https://lucide.dev">Lucide</a> (ISC).
+    Pocket Roomie is an independent app, not made by, endorsed by or affiliated with Apple Inc. All product names and trademarks belong to their owners; see <a href="legal.html">Legal &amp; Credits</a>.
   </footer>
 </div>
 </body>

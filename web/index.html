@@ -5,13 +5,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Roomie · A lighter way to use your Apple Home</title>
-  <meta name="description" content="Roomie is a companion to Apple's Home app. It changes nothing in your setup: it opens on the room you're in, switches rooms in a swipe, and shows what's still on. Light, simple, quick.">
-  <meta property="og:title" content="Roomie · A lighter way to use your Apple Home">
+  <title>Pocket Roomie · A lighter way to use your Apple Home</title>
+  <meta name="description" content="Pocket Roomie is a companion to Apple's Home app. It changes nothing in your setup: it opens on the room you're in, switches rooms in a swipe, and shows what's still on. Light, simple, quick.">
+  <meta property="og:title" content="Pocket Roomie · A lighter way to use your Apple Home">
   <meta property="og:description" content="Works with the home you already set up. Opens on the room you're in, switches rooms in a swipe, shows what's still on.">
   <meta property="og:image" content="icon-512.png">
   <link rel="icon" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <script>document.documentElement.classList.add("js")</script>
+  <script type="module" src="vendor/esp-web-tools/install-button.js"></script>
   <style>
     :root {
       color-scheme: dark;
@@ -19,19 +21,18 @@
       --orange: #FF9500; --text: #F1F0FF; --soft: #C3C0F5; --line: rgba(255, 255, 255, 0.13);
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
     body {
       margin: 0;
       font: 18px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--text);
-      background: radial-gradient(1100px 700px at 70% -10%, #5A54E6 0%, var(--indigo) 22%, var(--deep) 55%, var(--night) 100%) fixed;
+      background: var(--night);
+      overflow-x: hidden;
     }
     .wrap { max-width: 1040px; margin: 0 auto; padding: 0 22px; }
     a { color: #DCDAFF; }
 
     /* Top */
-    header { display: flex; align-items: center; gap: 12px; padding: 22px 0; }
-    header img { width: 40px; height: 40px; border-radius: 9px; }
-    header b { font-size: 21px; letter-spacing: -0.3px; }
 
     /* Hero */
     .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; padding: 40px 0 70px; }
@@ -67,20 +68,49 @@
     .tile.lit { background: #FFF6E5; color: #2A2105; }
     .tile.lit i { color: #7A5A10; }
 
-    /* Three ideas */
-    .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding-bottom: 70px; }
-    .idea { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 28px; padding: 30px 26px; }
-    .ic { width: 44px; height: 44px; color: var(--orange); margin-bottom: 14px; }
-    .idea h2 { font-size: 24px; line-height: 1.2; letter-spacing: -0.4px; margin: 0 0 10px; }
+    /* Three ideas: open columns, no cards */
+    .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; padding: 30px 0 96px; }
+    .idea { border-top: 1px solid var(--line); padding-top: 30px; }
+    .ic { width: 44px; height: 44px; color: var(--orange); margin-bottom: 16px; }
+    .idea h2 { font-size: 30px; line-height: 1.12; letter-spacing: -0.7px; margin: 0 0 12px; }
     .idea p { margin: 0; color: var(--soft); }
 
-    /* Reassurance */
-    .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 34px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .fact b { display: block; font-size: 18px; margin-bottom: 4px; }
-    .fact span { color: var(--soft); font-size: 16px; }
+    /* Every section paints its own full-width background (--bg), so nothing depends on where the page is
+       scrolled. The pseudo-element is exactly one viewport wide, centered on the column. */
+    .fb { position: relative; isolation: isolate; }
+    .fb::before { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; margin-left: -50vw; background: var(--bg); }
+    /* Decorative line art behind a section's content (never read out, never clickable) */
+    .deco { position: absolute; z-index: -1; top: 0; left: 50%; width: 100vw; height: 100%; margin-left: -50vw; pointer-events: none; overflow: hidden; }
+    .deco svg { display: block; width: 100%; height: 100%; }
+    .deco canvas { display: block; width: 100%; height: 100%; }
+    .deco.waves { height: 1400px; }                       /* the waves spread from the glow at the section's top right */
+    .deco.lit { top: auto; bottom: 0; height: 1100px; }   /* the lit dots: the lower part of the band above it */
+    .deco.lit.mid { top: 14%; bottom: auto; }              /* the small generator, higher up on the left */
+    .plan { fill: none; stroke: #fff; stroke-linecap: round; stroke-linejoin: round; }
+    .plan .wall { stroke-width: 9; stroke-opacity: 0.075; }
+    .plan .in { stroke-width: 5; }
+    .plan .win { stroke-width: 2.5; stroke-opacity: 0.09; }
+    .plan .furn { stroke-width: 2.5; stroke-opacity: 0.05; }
+    .plan .door { stroke-width: 2; stroke-opacity: 0.05; }
+    #beacons .card { -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+    .hero { --bg: linear-gradient(180deg, rgba(13, 11, 36, 0) 62%, #0D0B24 100%), radial-gradient(1100px 760px at 70% 0%, #5A54E6 0%, #423CCC 22%, #1E1A5E 56%, #0D0B24 100%); }
+    .hero::before { top: -64px; }
+    .promise { --bg: #26217A; }
+    .more { --bg: #110F33; }
+    #guide { --bg: radial-gradient(rgba(255, 255, 255, 0.075) 1.3px, transparent 1.6px) 0 0 / 32px 32px, #07061A; }
+    #beacons { --bg: radial-gradient(1100px 700px at 90% 0%, #5A4CE8 0%, #2D2790 36%, #100D30 100%); }
+    #help { --bg: #1A1650; }
+
+    /* Promises */
+    .promise { margin: 0; padding: 84px 0 80px; }
+    .promise h2 { font-size: clamp(30px, 4.6vw, 44px); line-height: 1.08; letter-spacing: -1.1px; margin: 0 0 40px; text-align: center; }
+    .promises { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .promises .ic { width: 52px; height: 52px; margin-bottom: 16px; }
+    .promises h3 { font-size: 27px; line-height: 1.12; letter-spacing: -0.6px; margin: 0 0 10px; }
+    .promises p { margin: 0; font-size: 18px; color: #E4E2FF; }
 
     /* Beacons (optional) */
-    .more { margin: 64px 0; }
+    .more { margin: 0; padding: 88px 0; }
     .more h2 { font-size: 30px; letter-spacing: -0.6px; margin: 0 0 10px; }
     .more .why { color: var(--soft); max-width: 46em; margin: 0 0 26px; }
     .options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -90,37 +120,120 @@
     .option .ic { color: var(--soft); }
     .button { display: inline-block; white-space: nowrap; font-weight: 600; font-size: 16px; color: var(--text); text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 999px; padding: 12px 22px; }
 
-    footer { padding: 10px 0 50px; font-size: 14px; color: #A9A6DA; }
+    footer { margin-top: 0; padding: 56px 0 50px; font-size: 14px; color: #A9A6DA; }
     footer nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 12px; }
+
+    /* Top bar: stays in view, like apple.com */
+    .bar { position: sticky; top: 0; z-index: 10; background: rgba(13, 11, 36, 0.62); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+    .bar .wrap { display: flex; align-items: center; gap: 12px; padding-top: 10px; padding-bottom: 10px; }
+    .bar a.brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; }
+    .bar img { width: 30px; height: 30px; border-radius: 7px; }
+    .bar b { font-size: 18px; letter-spacing: -0.3px; }
+    .bar nav { margin-left: auto; display: flex; gap: 22px; font-size: 14px; }
+    .bar nav a { color: var(--soft); text-decoration: none; }
+    .bar nav a:hover { color: var(--text); }
+
+    /* Guide */
+    .band { padding: 88px 0 64px; margin: 0; }
+    .band .kicker { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; color: var(--orange); margin: 0 0 8px; }
+    .band h2.big { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; letter-spacing: -1.2px; margin: 0 0 14px; }
+    .band .sub { font-size: 20px; color: var(--soft); max-width: 36em; margin: 0 0 20px; }
+    .step { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding: 56px 0; }
+    .step:nth-of-type(even) .shots { order: -1; }
+    .step h3 { font-size: clamp(26px, 3.4vw, 34px); line-height: 1.12; letter-spacing: -0.8px; margin: 0 0 12px; }
+    .step p { margin: 0 0 12px; color: var(--soft); }
+    .step p b { color: var(--text); }
+    .shots { display: flex; gap: 18px; justify-content: center; }
+    .shot {
+      width: 100%; max-width: 270px; padding: 7px; border-radius: 46px;
+      background: #08071a; border: 1px solid var(--line);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45);
+    }
+    .shots.two .shot { max-width: 224px; padding: 6px; border-radius: 40px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45); }
+    .shot img { display: block; width: 100%; height: auto; border-radius: 39px; }
+    .shots.two .shot img { border-radius: 34px; }
+
+    /* Beacons */
+    .card { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 28px; padding: 30px 28px; margin-top: 22px; }
+    .card h3 { font-size: 24px; letter-spacing: -0.4px; margin: 0 0 14px; }
+    .install { text-align: center; padding: 38px 28px; }
+    esp-web-install-button button { font: 600 17px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--night); background: #fff; border: 0; border-radius: 999px; padding: 16px 32px; cursor: pointer; }
+    .install p { margin: 18px 0 0; font-size: 15px; color: var(--soft); }
+    ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+    ol.steps li { counter-increment: s; position: relative; padding-left: 48px; margin: 0 0 16px; color: var(--soft); }
+    ol.steps li:last-child { margin-bottom: 0; }
+    ol.steps li b { color: var(--text); }
+    ol.steps li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); color: var(--text); font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .tips { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 22px; }
+    .tips .card { margin-top: 0; }
+    .tips p { margin: 0 0 12px; color: var(--soft); font-size: 16px; }
+    .tips p:last-child { margin-bottom: 0; }
+    .tips b { color: var(--text); }
+    ul.look { margin: 0; padding-left: 20px; color: var(--soft); font-size: 16px; }
+    ul.look li { margin: 0 0 9px; }
+    ul.look li:last-child { margin-bottom: 0; }
+    ul.look b { color: var(--text); }
+    code { background: rgba(255, 255, 255, 0.1); padding: 1px 7px; border-radius: 6px; font-size: 0.9em; }
+
+    /* Troubleshooting */
+    .faq { margin-top: 26px; border-top: 1px solid var(--line); }
+    .faq details { border-bottom: 1px solid var(--line); }
+    .faq summary { cursor: pointer; list-style: none; padding: 20px 36px 20px 0; font-size: 19px; font-weight: 600; letter-spacing: -0.2px; position: relative; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-size: 28px; font-weight: 300; color: var(--soft); transition: transform 0.2s; }
+    .faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+    .faq details > div { padding: 0 0 22px; color: var(--soft); font-size: 17px; max-width: 42em; }
+    .faq details p { margin: 0 0 10px; }
+    .faq b { color: var(--text); }
+
+    /* Things fade in as you scroll (never hidden without JavaScript or if motion is reduced) */
+    .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .js .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .js .reveal { opacity: 1; transform: none; transition: none; } }
+
+    @media (max-width: 860px) {
+      .step { grid-template-columns: 1fr; gap: 34px; padding: 40px 0; }
+      .step:nth-of-type(even) .shots { order: 0; }
+      .tips { grid-template-columns: 1fr; }
+      .bar nav a:not(.keep) { display: none; }
+    }
 
     @media (max-width: 860px) {
       .hero { grid-template-columns: 1fr; gap: 44px; padding-top: 20px; text-align: center; }
       .lead { margin-left: auto; margin-right: auto; }
-      .three, .facts { grid-template-columns: 1fr; }
+      .three, .promises { grid-template-columns: 1fr; }
+      .promise { padding: 56px 0 52px; }
+      .promise h2 { text-align: left; }
       .options { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <img src="apple-touch-icon.png" alt="">
-    <b>Roomie</b>
-  </header>
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="apple-touch-icon.png" alt=""><b>Pocket Roomie</b></a>
+    <nav aria-label="Sections">
+      <a href="#guide" class="keep">How to use</a>
+      <a href="#beacons">Room beacons</a>
+      <a href="#help" class="keep">Help</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap" id="top">
 
-  <section class="hero">
+  <section class="hero fb">
     <div>
       <div class="tag">Light · Simple · Quick</div>
       <h1>Your Apple Home,<br><span>one room at a time.</span></h1>
-      <p class="lead">Roomie is a companion to Apple's Home app. It doesn't change anything: it uses the lights and devices you've already set up, and simply shows you the room you're in, so a lamp is always one tap away.</p>
+      <p class="lead">A companion to Apple's Home app. It reuses what you've set up, so a lamp is always one tap away.</p>
       <a class="store" href="#" aria-disabled="true" onclick="return false">
         <svg width="18" height="22" viewBox="0 0 18 22" aria-hidden="true"><path fill="currentColor" d="M14.9 11.7c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9C4.4 5.8 2.8 6.9 1.9 8.5.1 11.7 1.4 16.4 3.2 19c.9 1.3 1.9 2.7 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.6 1-1.5 1.4-2.9 1.4-3-.1 0-2.7-1-2.7-4.3zM12.4 4c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.2 1.1.1 2.3-.6 3-1.5z"/></svg>
         Coming soon <small>on the App Store</small>
       </a>
-      <p class="needs">You need an iPhone and lights or devices already set up in Apple's Home app.</p>
+      <p class="needs">You need an iPhone and smart home accessories already set up in Apple's Home app.</p>
     </div>
 
-    <div class="phone" role="img" aria-label="Roomie on an iPhone, showing the Living Room: two lamps on, the blinds half open and the TV off.">
+    <div class="phone" role="img" aria-label="Pocket Roomie on an iPhone, showing the Living Room: two lamps on, the blinds half open and the TV off.">
       <div class="notch"></div>
       <h3>Living Room</h3>
       <p class="here">● You're here</p>
@@ -146,57 +259,374 @@
     </div>
   </section>
 
-  <section class="three" aria-label="What Roomie does">
+  <section class="three" aria-label="What Pocket Roomie does">
     <article class="idea">
       <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
       <h2>It knows the room you're in</h2>
-      <p>Open Roomie and it's already on the right room: just its lamps, blinds and fans, big and easy to tap. Walk through your home once so it learns your rooms, and it follows you from there.</p>
+      <p>Open Pocket Roomie and you're already in the right room. Walk through your home once and it learns your rooms.</p>
     </article>
     <article class="idea">
       <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5"/><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47"/><path d="M2.541 5.594a13.487 13.487 0 0 1 2.46 -1.427"/><path d="M14 3.458c1.32 .354 2.558 .902 3.685 1.612"/></svg>
       <h2>Another room in a swipe</h2>
-      <p>Swipe in from the edge of the screen and your favorite rooms appear right under your thumb: slide onto one and you're there, with one hand, from either side. Or press the iPhone's Action button to open Roomie where you need it.</p>
+      <p>Swipe in and your rooms appear under your thumb, or open Pocket Roomie with the Action button.</p>
     </article>
     <article class="idea">
       <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
       <h2>See what's still on</h2>
-      <p>Going to bed or leaving the house? <b>What's On</b> lists every light and device left on, anywhere at home, and turns them all off with one tap.</p>
+      <p>A quick view of every light and accessory left on, so you can turn off whatever you want with one tap.</p>
     </article>
   </section>
 
-  <section class="facts" aria-label="Good to know">
-    <div class="fact"><b>Changes nothing</b><span>Your rooms, accessories and automations stay exactly as they are in the Home app. Roomie just gives them a lighter, quicker face.</span></div>
-    <div class="fact"><b>Nothing to set up</b><span>No accounts, no new hubs, nothing to install around the house. If it's in the Home app, it's in Roomie.</span></div>
-    <div class="fact"><b>Private</b><span>No ads, no tracking, no data collected. Everything stays on your iPhone.</span></div>
+  <section class="promise fb" aria-label="Good to know">
+    <div class="deco" aria-hidden="true">
+      <svg viewBox="0 0 1600 560" preserveAspectRatio="xMidYMid slice">
+        <g class="plan" transform="translate(800 290) rotate(-24) scale(1.5) translate(-500 -300)">
+          <!-- walls: outside (thick), inside (thinner), with the door openings left out -->
+          <path class="wall" d="M0 0 H1000 V600 H340 M200 600 H0 V0"/>
+          <path class="wall in" d="M540 0 V50 M540 190 V430 M540 240 H800 M880 240 H1000 M740 240 V500 M740 570 V600 M540 430 H600 M680 430 H740 M0 380 H140 M420 380 H540"/>
+          <!-- windows -->
+          <path class="win" d="M90 -7 H230 M90 7 H230 M330 -7 H470 M330 7 H470 M640 -7 H760 M640 7 H760 M850 -7 H960 M850 7 H960 M993 300 V420 M1007 300 V420 M-7 110 V250 M7 110 V250 M800 593 H940 M800 607 H940"/>
+          <!-- doors, with their swing -->
+          <path class="door" d="M200 600 V460 M340 600 A140 140 0 0 0 200 460 M600 430 V510 M680 430 A80 80 0 0 1 600 510 M740 500 H670 M740 570 A70 70 0 0 1 670 500 M800 240 V320 M880 240 A80 80 0 0 1 800 320"/>
+          <!-- furniture -->
+          <g class="furn">
+            <rect x="50" y="250" width="230" height="80" rx="16"/>
+            <rect x="110" y="160" width="100" height="60" rx="8"/>
+            <circle cx="420" cy="110" r="44"/>
+            <path d="M560 14 H986 V50 H560 Z"/>
+            <rect x="640" y="112" width="220" height="56" rx="6"/>
+            <rect x="790" y="330" width="170" height="190" rx="10"/>
+            <rect x="802" y="342" width="62" height="34" rx="8"/>
+            <rect x="886" y="342" width="62" height="34" rx="8"/>
+            <rect x="556" y="256" width="170" height="64" rx="30"/>
+            <circle cx="640" cy="388" r="15"/>
+            <rect x="690" y="352" width="34" height="52" rx="10"/>
+            <rect x="40" y="440" width="120" height="30" rx="6"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <h2 class="reveal">Made to stay out of your way.</h2>
+    <div class="promises">
+      <article class="reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" x2="19" y1="9" y2="9"/><line x1="5" x2="19" y1="15" y2="15"/></svg>
+        <h3>Changes nothing</h3>
+        <p>Your rooms, accessories and automations stay exactly as they are in the Home app.</p>
+      </article>
+      <article class="reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/></svg>
+        <h3>Nothing to set up</h3>
+        <p>No accounts, no new hubs, nothing to install. If it's in the Home app, it's in Pocket Roomie.</p>
+      </article>
+      <article class="reveal">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <h3>Private</h3>
+        <p>No ads, no tracking, no data collected. Everything stays on your iPhone.</p>
+      </article>
+    </div>
   </section>
 
-  <section class="more">
+  <section class="more fb">
     <h2>Even more precise, if you like</h2>
-    <p class="why">Roomie learns your rooms from the devices you already have. But rooms next to each other, or open to each other like a kitchen and a living room, can look alike. A small beacon in one of them tells Roomie exactly which side of the doorway you're on, and keeps teaching it your rooms as your home changes. Completely optional.</p>
+    <p class="why">Pocket Roomie recognizes your rooms from the devices you already have. Add small beacons and it gets even more accurate. Completely optional.</p>
     <div class="options">
       <div class="option">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9"/><path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5"/><circle cx="12" cy="9" r="2"/><path d="M16.2 4.8c2 2 2.26 5.11.8 7.47"/><path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1"/><path d="M9.5 18h5"/><path d="m8 22 4-11 4 11"/></svg>
-        <h3>Add beacons</h3>
-        <p>Any Bluetooth beacon you can buy works, from any brand. Put it in the room and pick its room in Roomie. That's it.</p>
+        <h3>Add beacons <small style="font-size:14px;color:var(--orange);font-weight:600;margin-left:6px">Recommended</small></h3>
+        <p>The best upgrade for Auto. Any Bluetooth beacon works, from any brand. Put it in a room and pick that room in Pocket Roomie.</p>
+        <a class="button" href="#choose-beacons">What to look for</a>
       </div>
       <div class="option">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
         <h3>Or build your own</h3>
-        <p>Got an ESP32 board, or happy to buy an inexpensive one? Install Roomie's free beacon software from your computer in a couple of minutes, with no settings to type.</p>
-        <a class="button" href="beacons.html">Set up an ESP32</a>
+        <p>Pocket Roomie supplies free firmware for ESP32 boards, installed from your computer with no settings to type. Results vary by board.</p>
+        <a class="button" href="#build-beacon">Set up an ESP32</a>
       </div>
     </div>
   </section>
 
+  <section class="band fb" id="guide">
+    <div class="deco lit" aria-hidden="true"><canvas></canvas></div>
+    <div class="deco lit mid" aria-hidden="true"><canvas></canvas></div>
+    <p class="kicker reveal">How to use Pocket Roomie</p>
+    <h2 class="big reveal">That's all there is to it.</h2>
+    <p class="sub reveal">Pocket Roomie is made to need no manual. Here is everything, once, in order.</p>
+
+    <article class="step reveal">
+      <div>
+        <h3>Connect your Home</h3>
+        <p>Open Pocket Roomie and tap <b>Connect</b>. iOS asks once for permission to your Home, so Pocket Roomie can show the lights and devices you already set up in the Home app.</p>
+        <p>Nothing is copied or sent anywhere. If you tap <b>Not Now</b>, you can allow it later in the iPhone's Settings.</p>
+      </div>
+      <div class="shots"><div class="shot"><img src="img/connect.jpg" width="540" height="1176" alt="The Connect to Your Home screen of Pocket Roomie" loading="lazy"></div></div>
+    </article>
+
+    <article class="step reveal">
+      <div>
+        <h3>Choose how it finds your room</h3>
+        <p><b>Manual</b> needs nothing: you pick a room and it stays until you change it. <b>Auto</b> follows you from room to room, using the Bluetooth signals already around your home.</p>
+        <p>To set up Auto, open <b>Settings → Auto Setup</b> and scan each room 3 times, 15 seconds each, standing in a different spot every time. <b>Switching speed</b> lets you choose between quick (Fast) and steady (Careful). Change your mind any time.</p>
+      </div>
+      <div class="shots two"><div class="shot"><img src="img/choose.jpg" width="540" height="1176" alt="Choosing between Manual and Auto" loading="lazy"></div><div class="shot"><img src="img/auto-setup.jpg" width="540" height="1176" alt="Auto Setup, with the rooms to scan and the switching speed" loading="lazy"></div></div>
+    </article>
+
+    <article class="step reveal">
+      <div>
+        <h3>Use your room</h3>
+        <p><b>Tap</b> a tile to switch it. <b>− and +</b> dim a light, or move blinds. Pocket Roomie asks the Home app, so what you see is what your home is doing.</p>
+        <p><b>Press and hold</b> a tile for everything about that accessory: brightness, colour, white tone, and more for fans, blinds or thermostats. Scroll down to choose its icon from a big set, or to hide it. Pocket Roomie keeps those choices on your iPhone; your Home app stays exactly as it is.</p>
+      </div>
+      <div class="shots two"><div class="shot"><img src="img/room.jpg" width="540" height="1176" alt="A room with its lights, blinds and fan" loading="lazy"></div><div class="shot"><img src="img/detail.jpg" width="540" height="1176" alt="The controls of a colour light: brightness, colour and white tone" loading="lazy"></div></div>
+    </article>
+
+    <article class="step reveal">
+      <div>
+        <h3>Change room in a swipe</h3>
+        <p>Swipe in from the edge of the screen and your favorite rooms appear under your thumb. Slide onto one and let go. You can also tap a room's name at the top.</p>
+        <p>Choose which rooms appear in <b>Settings → Quick Menu</b>.</p>
+      </div>
+      <div class="shots"><div class="shot"><img src="img/quick-menu.jpg" width="540" height="1176" alt="The quick room menu appearing under the thumb" loading="lazy"></div></div>
+    </article>
+
+    <article class="step reveal">
+      <div>
+        <h3>See what's still on</h3>
+        <p><b>What's On</b> lists every light and device left on, in every room, with the room you're in first. Tap one to turn it off, or tap <b>Turn All Off</b>.</p>
+        <p>Open it from the first tab of the room names, or from the Action button, Control Center or the Lock Screen.</p>
+      </div>
+      <div class="shots"><div class="shot"><img src="img/whats-on.jpg" width="540" height="1176" alt="What's On, with Turn All Off and the devices that are on" loading="lazy"></div></div>
+    </article>
+  </section>
+
+  <section class="band fb" id="beacons">
+    <div class="deco waves" aria-hidden="true"><canvas></canvas></div>
+    <p class="kicker reveal">Room beacons</p>
+    <h2 class="big reveal">For even more accuracy.</h2>
+    <p class="sub reveal">Optional, and the best way to make Auto sharper. A small beacon in a room tells Pocket Roomie exactly which room you're in. Buy ready-made ones, or build your own further down.</p>
+
+    <div class="tips reveal" id="choose-beacons">
+      <div class="card">
+        <h3>Buy ready-made beacons <small style="font-size:14px;color:var(--orange);font-weight:600;margin-left:6px">Recommended</small></h3>
+        <p><b>What to look for</b></p>
+        <ul class="look">
+          <li>A standard Bluetooth beacon, with a <b>UUID, Major and Minor</b>. Most small beacons are.</li>
+          <li>A maker's app that lets you <b>change the Major and Minor</b>, so each beacon can be different.</li>
+          <li><b>Adjustable transmit power</b> is a big help: low power keeps a beacon in its own room.</li>
+          <li>Any brand works. Battery or USB powered is up to you; USB never needs a new battery.</li>
+          <li>One beacon per room is plenty. Start with the rooms Pocket Roomie mixes up.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Set them up</h3>
+        <p><b>Give each one its own Major and Minor.</b> Many beacons are sold with the same Major and Minor, so Pocket Roomie can't tell them apart. Set them with the maker's own app.</p>
+        <p><b>Add each UUID in Pocket Roomie</b> under <b>Settings → Auto Setup → Room Beacons → Add Beacon ID</b>. Beacons can share one UUID or use different ones; Pocket Roomie takes as many as you add.</p>
+        <p><b>Lower the power</b> as far as still reaches the far corner of the room. A strong beacon leaks into the next room and blurs the difference. After changing power or moving a beacon, scan the rooms again.</p>
+      </div>
+    </div>
+
+    <div class="card reveal" id="build-beacon">
+      <h3>Build your own</h3>
+      <p style="margin:0 0 22px;color:var(--soft)">Pocket Roomie supplies free firmware that turns an ESP32 board into a room beacon, in one click from your computer. ESP32 boards differ (antenna, power supply), so results can be mixed; ready-made beacons are the safer choice.</p>
+      <div class="install" style="padding:0">
+        <esp-web-install-button manifest="manifest.json">
+          <button slot="activate">Install Pocket Roomie Beacon</button>
+          <span slot="unsupported">This browser can't talk to USB devices. Open this page in <b>Chrome</b> or <b>Edge</b> on a computer.</span>
+          <span slot="not-allowed">This page needs to be opened over HTTPS.</span>
+        </esp-web-install-button>
+        <p>Works with ESP32, ESP32-C3, ESP32-S3, ESP32-C6 and ESP32-H2. The chip is detected automatically.</p>
+        <p>The firmware is open source (MIT). <a href="https://github.com/pocketroomie/pocketroomie">See the code</a>.</p>
+      </div>
+    </div>
+
+    <div class="tips reveal">
+      <div class="card">
+        <h3>How it works</h3>
+        <ol class="steps">
+          <li>Plug the ESP32 into this computer with a USB cable that carries data (some only charge).</li>
+          <li>Click <b>Install Pocket Roomie Beacon</b>, pick the board and confirm. <b>Erase</b> wipes any earlier setup.</li>
+          <li>Plug it in where it will live, roughly in the middle of the room.</li>
+          <li>On your iPhone, open <b>Pocket Roomie → Settings → Auto Setup → Room Beacons</b> and tap the new beacon (it appears as <code>Roomie-XXXX</code>) to pick its room.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Good to know</h3>
+        <p><b>Board not found?</b> Hold the <b>BOOT</b> button while plugging it in, then click Install again.</p>
+        <p><b>Changing a beacon later:</b> unplug it and plug it back in. For 3 minutes it accepts changes from Pocket Roomie.</p>
+        <p><b>Private:</b> Bluetooth only, no Wi-Fi. It connects to nothing and stores only its own settings.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band fb" id="help">
+    <p class="kicker reveal">Help</p>
+    <h2 class="big reveal">If something isn't right.</h2>
+    <div class="faq reveal">
+      <details>
+        <summary>Pocket Roomie shows no rooms, or says it can't reach my Home</summary>
+        <div><p>Open the iPhone's <b>Settings → Pocket Roomie</b> and make sure <b>Home</b> is on. Pocket Roomie also needs at least one room with an accessory in the Home app.</p></div>
+      </details>
+      <details>
+        <summary>Auto shows the wrong room, or keeps switching</summary>
+        <div>
+          <p>Scan the room again in 3 different spots: <b>Settings → Auto Setup → the room → Record Scan</b>. Rooms next to each other need scans from near their shared door.</p>
+          <p>Try <b>Switching speed → Careful</b>. If an old scan is the problem, use <b>Forget Everything Learned</b> in Auto Setup, then scan again.</p>
+          <p>Rooms open to each other, like a kitchen and a living room, look alike to Bluetooth. A <a href="#beacons">room beacon</a> in one of them settles it.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Auto doesn't change rooms at all</summary>
+        <div><p>Auto needs Bluetooth on, and Location set to <b>While Using</b> if you use room beacons. It looks for your room while Pocket Roomie is open on screen.</p></div>
+      </details>
+      <details>
+        <summary>A tile says "No response"</summary>
+        <div><p>Pocket Roomie shows what your Home app knows. Open the Home app: if the accessory doesn't respond there either, check its power, its Wi-Fi and your home hub. Pull down in the room to refresh.</p></div>
+      </details>
+      <details>
+        <summary>Controls don't work when I'm away from home</summary>
+        <div><p>Controlling your home from outside needs a home hub, such as a HomePod or an Apple TV. It works the same as in the Home app.</p></div>
+      </details>
+      <details>
+        <summary>Pocket Roomie can't find my room beacons, or mixes them up</summary>
+        <div>
+          <p>Each beacon needs its own <b>Major</b> and <b>Minor</b>. Many are sold with the same ones, which makes them look like a single beacon. Change them with the maker's own app.</p>
+          <p>Every <b>UUID</b> your beacons use must be added in <b>Settings → Auto Setup → Room Beacons → Add Beacon ID</b>. You can add as many as you need.</p>
+          <p>Lower the transmit power so a beacon is strong only in its own room, then forget what Pocket Roomie learned and scan the rooms again.</p>
+        </div>
+      </details>
+      <details>
+        <summary>I want to start again</summary>
+        <div><p><b>Settings → Reset All Pocket Roomie Data</b> clears everything Pocket Roomie keeps on your iPhone. Your Home app isn't touched.</p></div>
+      </details>
+    </div>
+    <p class="sub reveal" style="margin-top:30px;font-size:17px">Still stuck? <a href="https://github.com/pocketroomie/pocketroomie/issues">Tell us what happened</a>.</p>
+  </section>
+
   <footer>
     <nav>
-      <a href="beacons.html">Room beacon installer</a>
+      <a href="#guide">How to use</a>
+      <a href="#beacons">Room beacons</a>
+      <a href="#help">Help</a>
       <a href="privacy.html">Privacy Policy</a>
-      <a href="https://github.com/roomiehome/roomiehome/issues">Support</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="legal.html">Legal &amp; Credits</a>
+      <a href="https://github.com/pocketroomie/pocketroomie">Source code</a>
+      <a href="https://github.com/pocketroomie/pocketroomie/issues">Support</a>
     </nav>
-    Roomie is an independent app, not made by Apple. Apple, iPhone and HomeKit are trademarks of Apple Inc.<br>
+    Pocket Roomie is an independent app, not made by, endorsed by or affiliated with Apple Inc. or with any other product or company that uses a similar name. Apple, iPhone, iPad, HomeKit and
+    App Store are trademarks of Apple Inc. Bluetooth is a registered trademark of Bluetooth SIG, Inc. ESP32 is a trademark of
+    Espressif Systems. Other names belong to their owners. See <a href="legal.html">Legal &amp; Credits</a>.
+    Pocket Roomie controls home accessories and is provided as is: please read the <a href="terms.html">Terms of Use</a>.<br>
     Icons: <a href="https://lucide.dev">Lucide</a> (ISC) and <a href="https://tabler.io/icons">Tabler Icons</a> (MIT).
   </footer>
 </div>
+<script>
+  // Fade things in as they scroll into view.
+  (function () {
+    var items = document.querySelectorAll(".reveal");
+    if (!("IntersectionObserver" in window)) { items.forEach(function (e) { e.classList.add("in"); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    items.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+<script>
+  // The room beacon waves: rings spreading from the glow at the top right of the beacons section, and the
+  // dots of the band above lighting up as each ring passes. A smaller generator higher up in the dotted band
+  // adds a second, slower rhythm. One clock drives all of it, so everything stays in step.
+  (function () {
+    var big = document.querySelector("#guide .deco.lit:not(.mid)"), mid = document.querySelector("#guide .deco.lit.mid");
+    var waves = document.querySelector("#beacons .deco.waves");
+    if (!big || !mid || !waves) return;
+    var wc = waves.querySelector("canvas");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var GRID = 32, PEAK = 0.09;
+    var W = 0, WH = 0, dpr = 1, visible = 0, raf = 0, section = big.parentElement;
+    // Each source of waves lights the dots of its own canvas.
+    var sources = [
+      { deco: big, x: 0.9, y: "bottom", rmax: 1300, period: 9000, step: 1800, count: 5, gain: 1.0, marker: true, size: 1.35 },
+      { deco: mid, x: 0.1, y: "middle", rmax: 640, period: 7000, step: 2300, count: 3, gain: 0.7, marker: true, size: 1 },
+    ];
+
+    function size() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w = waves.getBoundingClientRect(), sr = section.getBoundingClientRect();
+      W = w.width; WH = w.height;
+      wc.width = W * dpr; wc.height = WH * dpr;
+      sources.forEach(function (k) {
+        var r = k.deco.getBoundingClientRect(), cv = k.deco.querySelector("canvas");
+        k.W = r.width; k.H = r.height; k.top = r.top - sr.top;       // where this canvas sits in the band
+        k.cx = k.W * k.x; k.cy = k.y === "bottom" ? k.H : k.H / 2;
+        cv.width = k.W * dpr; cv.height = k.H * dpr; k.cv = cv;
+      });
+      draw(performance.now());
+    }
+    // How far a wave has spread, and how strong it still is (0…1 through its life)
+    function wave(t, k, i) {
+      var p = ((t + i * k.step) % k.period) / k.period;
+      return { p: p, r: (1 - Math.pow(1 - p, 2.2)) * k.rmax, a: p < 0.12 ? p / 0.12 : 1 - (p - 0.12) / 0.88 };
+    }
+    // A generator's own mark: a soft glow with a bright dot, flashing as each wave leaves
+    function marker(d, cx, cy, pulse, size) {
+      var r = 26 * size, g = d.createRadialGradient(cx, cy, 0, cx, cy, r);
+      g.addColorStop(0, "rgba(190,184,255," + (0.35 + 0.4 * pulse).toFixed(3) + ")");
+      g.addColorStop(1, "rgba(190,184,255,0)");
+      d.fillStyle = g; d.beginPath(); d.arc(cx, cy, r, 0, Math.PI * 2); d.fill();
+      d.fillStyle = "rgba(225,222,255," + (0.7 + 0.3 * pulse).toFixed(3) + ")";
+      d.beginPath(); d.arc(cx, cy, 3.2 * size, 0, Math.PI * 2); d.fill();
+    }
+    function pulseOf(t, k) {
+      var pulse = 0;
+      if (reduce) return pulse;
+      for (var i = 0; i < k.count; i++) pulse = Math.max(pulse, Math.exp(-wave(t, k, i).p * 16));
+      return pulse;
+    }
+    function draw(t) {
+      var i;
+      // rings behind the beacons section: the big generator only
+      var c = wc.getContext("2d");
+      c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, WH);
+      c.lineWidth = 1.5;
+      for (i = 0; i < sources[0].count; i++) {
+        var q = reduce ? { r: 260 + i * 240, a: 0.35 } : wave(t, sources[0], i);
+        c.strokeStyle = "rgba(255,255,255," + (PEAK * q.a).toFixed(3) + ")";
+        c.beginPath(); c.arc(W * sources[0].x, 0, q.r, 0, Math.PI * 2); c.stroke();
+      }
+      marker(c, W * sources[0].x, 0, pulseOf(t, sources[0]), sources[0].size);
+      // dots lighting up
+      sources.forEach(function (k) {
+        var d = k.cv.getContext("2d");
+        d.setTransform(dpr, 0, 0, dpr, 0, 0); d.clearRect(0, 0, k.W, k.H);
+        var ws = [];
+        for (i = 0; i < k.count && !reduce; i++) ws.push(wave(t, k, i));
+        var first = Math.ceil((k.top - GRID / 2) / GRID) * GRID + GRID / 2 - k.top;   // the same grid as the CSS dots
+        for (var y = first; y < k.H; y += GRID) {
+          for (var x = GRID / 2; x < k.W; x += GRID) {
+            var dist = Math.hypot(x - k.cx, y - k.cy), lit = 0;
+            for (i = 0; i < ws.length; i++) { var e = (dist - ws[i].r) / (k.marker ? 54 : 70); lit += ws[i].a * Math.exp(-e * e); }
+            lit = Math.min(lit * k.gain, 1);
+            if (lit < 0.03) continue;
+            d.fillStyle = "rgba(170,162,255," + (0.15 + 0.6 * lit).toFixed(3) + ")";
+            d.beginPath(); d.arc(x, y, 1.4 + 1.3 * lit, 0, Math.PI * 2); d.fill();
+          }
+        }
+        if (k.marker) marker(d, k.cx, k.cy, pulseOf(t, k), k.size);
+      });
+    }
+    function loop(t) { draw(t); raf = visible > 0 && !reduce ? requestAnimationFrame(loop) : 0; }
+    function check() { if (visible > 0 && !reduce && !raf) raf = requestAnimationFrame(loop); }
+
+    size();
+    window.addEventListener("resize", size);
+    if ("ResizeObserver" in window) new ResizeObserver(size).observe(document.body);
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { visible += e.isIntersecting ? 1 : -1; });
+        visible = Math.max(visible, 0); check();
+      });
+      io.observe(section); io.observe(waves.parentElement);
+    } else { visible = 1; check(); }
+  })();
+</script>
 </body>
 </html>

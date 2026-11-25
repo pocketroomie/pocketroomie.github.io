@@ -1,9 +1,9 @@
-# Roomie Beacon
+# Pocket Roomie Beacon
 
-Firmware that turns any ESP32 into a Bluetooth room beacon for the **Roomie** iOS app,
+Firmware that turns any ESP32 into a Bluetooth room beacon for the **Pocket Roomie** iOS app,
 plus a one-click web installer.
 
-**Install:** https://roomiehome.github.io/roomiehome/beacons.html (Chrome or Edge on a computer). About Roomie: https://roomiehome.github.io/roomiehome/
+**Install:** https://pocketroomie.github.io/pocketroomie/#beacons (Chrome or Edge on a computer). About Pocket Roomie: https://pocketroomie.github.io/pocketroomie/
 
 ## How it works
 
@@ -11,15 +11,15 @@ plus a one-click web installer.
    (ESP32, ESP32-C3, ESP32-S3, ESP32-C6, ESP32-H2).
 2. The board starts **unconfigured**: it advertises a setup signal named `Roomie-XXXX`
    (the last 4 hex digits of its Bluetooth address).
-3. In Roomie, pick the beacon and the room. Roomie writes its settings over Bluetooth; the beacon
+3. In Pocket Roomie, pick the beacon and the room. Pocket Roomie writes its settings over Bluetooth; the beacon
    saves them and restarts as a room beacon.
-4. To change a beacon later, power-cycle it: for **3 minutes** after it's plugged in (or after its reset button, or after Roomie changed it) it accepts changes
+4. To change a beacon later, power-cycle it: for **3 minutes** after it's plugged in (or after its reset button, or after Pocket Roomie changed it) it accepts changes
    (alternating between the beacon signal and the setup signal), then it's a beacon only.
 
-Unexpected restarts (a power dip at high transmit power, a crash) don't open the setup window; the board counts them and reports them in its setup signal the next time it's plugged in, so Roomie can warn about a weak charger.
+Unexpected restarts (a power dip at high transmit power, a crash) don't open the setup window; the board counts them and reports them in its setup signal the next time it's plugged in, so Pocket Roomie can warn about a weak charger.
 
 There is no PIN: being able to unplug the beacon is the protection. Re-flashing with "erase" (or
-Roomie's "Reset beacon") returns it to unconfigured.
+Pocket Roomie's "Reset beacon") returns it to unconfigured.
 
 ## Power
 
@@ -27,7 +27,7 @@ Bluetooth LE only (Wi-Fi is never started), NimBLE stack, CPU at its lowest Blue
 no logging. The chip stays awake (no light sleep): beacons are meant for USB power, and an awake
 chip can always be found again for re-flashing. Roughly 20–25 mA on an ESP32-C3 (~0.1 W).
 
-## Setup protocol (for Roomie)
+## Setup protocol (for Pocket Roomie)
 
 | | UUID |
 |---|---|
@@ -64,4 +64,9 @@ the firmware files to GitHub Pages. To build locally: `cd firmware && idf.py set
 
 ## License
 
-MIT
+MIT (see `LICENSE`), provided as is, without warranty. Third-party components and trademarks: see
+`NOTICES.md`. Pocket Roomie is an independent project, not affiliated with Apple Inc.
+
+- Privacy Policy: https://pocketroomie.github.io/pocketroomie/privacy.html
+- Terms of Use: https://pocketroomie.github.io/pocketroomie/terms.html
+- Legal & Credits: https://pocketroomie.github.io/pocketroomie/legal.html

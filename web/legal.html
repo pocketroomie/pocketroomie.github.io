@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<!-- Icons: Lucide (ISC License, © Lucide Contributors, portions © Cole Bemis as part of Feather, MIT). -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pocket Roomie · Legal &amp; Credits</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="description" content="Trademarks, open-source licenses and credits for Pocket Roomie.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --indigo: #423CCC; --deep: #1E1A5E; --night: #0D0B24;
+      --orange: #FF9500; --text: #F1F0FF; --soft: #C3C0F5; --line: rgba(255, 255, 255, 0.13);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1100px 700px at 70% -10%, #5A54E6 0%, var(--indigo) 22%, var(--deep) 55%, var(--night) 100%) fixed;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+    a { color: #DCDAFF; }
+
+    header { display: flex; align-items: center; gap: 12px; padding: 22px 0; }
+    header a { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+    header img { width: 40px; height: 40px; border-radius: 9px; }
+    header b { font-size: 21px; letter-spacing: -0.3px; }
+
+    .hero { padding: 34px 0 26px; }
+    .ic { width: 48px; height: 48px; color: var(--orange); margin-bottom: 16px; }
+    h1 { font-size: clamp(36px, 6vw, 52px); line-height: 1.08; letter-spacing: -1.2px; margin: 0 0 12px; }
+    .lead { font-size: 18px; color: var(--soft); margin: 0; }
+
+    .card { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 28px; padding: 30px 28px; margin-bottom: 20px; }
+    .summary { font-size: 20px; line-height: 1.5; }
+    .summary b { color: var(--orange); }
+    h2 { font-size: 22px; letter-spacing: -0.3px; margin: 30px 0 10px; }
+    h2:first-child { margin-top: 0; }
+    .card p, .card li { color: var(--soft); }
+    .card b, .card i { color: var(--text); }
+    ul { margin: 0; padding-left: 22px; }
+    li { margin: 8px 0; }
+    p { margin: 0 0 12px; }
+
+    .card h3 { font-size: 18px; margin: 20px 0 6px; color: var(--text); }
+    .card h3:first-child { margin-top: 0; }
+    .note { font-size: 15px; color: var(--soft); }
+    .caps { text-transform: uppercase; font-size: 15px; letter-spacing: 0.1px; }
+    code { background: rgba(255,255,255,0.1); padding: 1px 7px; border-radius: 6px; font-size: 0.9em; }
+    footer { padding: 26px 0 50px; font-size: 14px; color: #A9A6DA; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="./"><img src="apple-touch-icon.png" alt=""><b>Pocket Roomie</b></a>
+  </header>
+
+  <section class="hero">
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M7 21h10"/></svg>
+    <h1>Legal &amp; Credits</h1>
+    <p class="lead">Trademarks, licenses and the open-source work Pocket Roomie builds on</p>
+  </section>
+
+  <div class="card">
+    <h2>Not affiliated</h2>
+    <p>Pocket Roomie is an independent app. It is not made by, endorsed by, sponsored by or affiliated
+      with Apple Inc., with any of the companies named below, or with any other product or company that uses a
+      similar name. They are named only to say what Pocket Roomie works with. Pocket Roomie is not
+      certified under, and doesn't use, Apple's "Works with Apple Home" program or badge.</p>
+
+    <h2>Trademarks</h2>
+    <p>All product names, logos and brands are the property of their owners.</p>
+    <ul>
+      <li>Apple, the Apple logo, iPhone, iPad, iOS, iCloud, HomeKit, Apple Home, the Home app, HomePod, Apple TV,
+        Siri, Shortcuts, SF Symbols and App Store are trademarks of Apple Inc., registered in the U.S. and other
+        countries and regions.</li>
+      <li>The <i>Bluetooth</i>&reg; word mark and logos are registered trademarks owned by Bluetooth SIG, Inc.</li>
+      <li>ESP32 and ESP-IDF are trademarks of Espressif Systems (Shanghai) Co., Ltd.</li>
+      <li>GitHub is a trademark of GitHub, Inc. Chrome is a trademark of Google LLC. Microsoft Edge is a trademark
+        of Microsoft Corporation.</li>
+      <li>"Pocket Roomie" is the name we use for this app, and we make no claim to any name that
+        others may own. Please don't use them in a way that suggests that another app or product is ours, or
+        that we endorse it.</li>
+    </ul>
+
+    <h2>Open source in Pocket Roomie's firmware and website</h2>
+    <h3>Pocket Roomie beacon firmware &mdash; MIT License</h3>
+    <p>&copy; 2026 pocketroomie. The full text is in the
+      <a href="https://github.com/pocketroomie/pocketroomie/blob/main/LICENSE">LICENSE</a> file of the repository.
+      The firmware is built with the open-source components below.</p>
+    <ul>
+      <li><b>ESP-IDF</b> by Espressif Systems, <b>Apache License 2.0</b>.</li>
+      <li><b>NimBLE</b> (Apache Mynewt NimBLE Bluetooth LE stack), <b>Apache License 2.0</b>.</li>
+      <li>Other components of ESP-IDF under their own licenses; see the notices in
+        <a href="https://github.com/pocketroomie/pocketroomie/blob/main/NOTICES.md">NOTICES.md</a>.</li>
+    </ul>
+    <h3>ESP Web Tools &mdash; Apache License 2.0</h3>
+    <p>The installer on this site uses ESP Web Tools 10.5.2 by the ESPHome maintainers, unmodified, served from
+      this site (<a href="vendor/esp-web-tools/LICENSE">license text</a>). Source:
+      <a href="https://github.com/esphome/esp-web-tools">github.com/esphome/esp-web-tools</a>.</p>
+    <h3>Icons</h3>
+    <p>Website icons are from <a href="https://lucide.dev">Lucide</a> and
+      <a href="https://tabler.io/icons">Tabler Icons</a>. The Pocket Roomie app itself uses Apple's SF Symbols, under
+      Apple's license.</p>
+    <p><b>Lucide</b> &mdash; ISC License. Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022
+      as part of Feather (MIT License). All other copyright (c) for Lucide are held by Lucide Contributors 2022.
+      Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is
+      hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+      The software is provided "as is" and the authors disclaim all warranties with regard to it, including all
+      implied warranties of merchantability and fitness. In no event shall the authors be liable for any special,
+      direct, indirect, or consequential damages or any damages whatsoever resulting from loss of use, data or
+      profits, whether in an action of contract, negligence or other tortious action, arising out of or in
+      connection with the use or performance of this software.</p>
+    <p><b>Tabler Icons</b> &mdash; MIT License, Copyright (c) 2020-2024 Pawe&#322; Kuna. Permission is hereby
+      granted, free of charge, to any person obtaining a copy of this software and associated documentation files
+      (the "Software"), to deal in the Software without restriction, including without limitation the rights to
+      use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+      persons to whom the Software is furnished to do so, subject to the following conditions: the above
+      copyright notice and this permission notice shall be included in all copies or substantial portions of the
+      Software. The Software is provided "as is", without warranty of any kind, express or implied, including but
+      not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In
+      no event shall the authors or copyright holders be liable for any claim, damages or other liability,
+      whether in an action of contract, tort or otherwise, arising from, out of or in connection with the
+      Software or the use or other dealings in the Software.</p>
+    <p><b>Apache License 2.0</b> &mdash; the text is at
+      <a href="https://www.apache.org/licenses/LICENSE-2.0">apache.org/licenses/LICENSE-2.0</a>, and a copy is in
+      the repository (<a href="https://github.com/pocketroomie/pocketroomie/blob/main/licenses/Apache-2.0.txt">licenses/Apache-2.0.txt</a>).</p>
+
+    <h2>Reporting a problem</h2>
+    <p>If you believe something on this site or in Pocket Roomie infringes your rights, or you spot a licensing or
+      trademark mistake, please tell us at
+      <a href="https://github.com/pocketroomie/pocketroomie/issues">github.com/pocketroomie/pocketroomie/issues</a>
+      and we will look at it promptly.</p>
+    <p class="note">Last updated November 25, 2026.</p>
+  </div>
+
+  <footer>
+    <nav>
+      <a href="./">Pocket Roomie</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="legal.html">Legal &amp; Credits</a>
+      <a href="https://github.com/pocketroomie/pocketroomie">Source code</a>
+      <a href="https://github.com/pocketroomie/pocketroomie/issues">Support</a>
+    </nav>
+    Pocket Roomie is an independent app, not made by, endorsed by or affiliated with Apple Inc. All product names and trademarks belong to their owners; see <a href="legal.html">Legal &amp; Credits</a>.
+  </footer>
+</div>
+</body>
+</html>

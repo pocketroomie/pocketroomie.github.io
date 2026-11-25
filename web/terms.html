@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<!-- Icons: Lucide (ISC License, © Lucide Contributors, portions © Cole Bemis as part of Feather, MIT). -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pocket Roomie · Terms of Use</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="description" content="Terms of use and disclaimers for the Pocket Roomie app, the room beacon firmware and this website.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --indigo: #423CCC; --deep: #1E1A5E; --night: #0D0B24;
+      --orange: #FF9500; --text: #F1F0FF; --soft: #C3C0F5; --line: rgba(255, 255, 255, 0.13);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1100px 700px at 70% -10%, #5A54E6 0%, var(--indigo) 22%, var(--deep) 55%, var(--night) 100%) fixed;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+    a { color: #DCDAFF; }
+
+    header { display: flex; align-items: center; gap: 12px; padding: 22px 0; }
+    header a { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+    header img { width: 40px; height: 40px; border-radius: 9px; }
+    header b { font-size: 21px; letter-spacing: -0.3px; }
+
+    .hero { padding: 34px 0 26px; }
+    .ic { width: 48px; height: 48px; color: var(--orange); margin-bottom: 16px; }
+    h1 { font-size: clamp(36px, 6vw, 52px); line-height: 1.08; letter-spacing: -1.2px; margin: 0 0 12px; }
+    .lead { font-size: 18px; color: var(--soft); margin: 0; }
+
+    .card { background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 28px; padding: 30px 28px; margin-bottom: 20px; }
+    .summary { font-size: 20px; line-height: 1.5; }
+    .summary b { color: var(--orange); }
+    h2 { font-size: 22px; letter-spacing: -0.3px; margin: 30px 0 10px; }
+    h2:first-child { margin-top: 0; }
+    .card p, .card li { color: var(--soft); }
+    .card b, .card i { color: var(--text); }
+    ul { margin: 0; padding-left: 22px; }
+    li { margin: 8px 0; }
+    p { margin: 0 0 12px; }
+
+    .card h3 { font-size: 18px; margin: 20px 0 6px; color: var(--text); }
+    .card h3:first-child { margin-top: 0; }
+    .note { font-size: 15px; color: var(--soft); }
+    .caps { text-transform: uppercase; font-size: 15px; letter-spacing: 0.1px; }
+    code { background: rgba(255,255,255,0.1); padding: 1px 7px; border-radius: 6px; font-size: 0.9em; }
+    footer { padding: 26px 0 50px; font-size: 14px; color: #A9A6DA; }
+    footer nav { display: flex; flex-wrap: wrap; gap: 22px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="./"><img src="apple-touch-icon.png" alt=""><b>Pocket Roomie</b></a>
+  </header>
+
+  <section class="hero">
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+    <h1>Terms of Use</h1>
+    <p class="lead">Please read these, especially the safety notes · Last updated November 25, 2026</p>
+  </section>
+
+  <div class="card">
+    <h2>1. About these terms</h2>
+    <p>These terms cover the Pocket Roomie app for iPhone, the Pocket Roomie beacon firmware and installer for ESP32 boards,
+      and this website (together, "Pocket Roomie"). By using Pocket Roomie you agree to them. If you don't agree, please don't
+      use it. The Pocket Roomie app is distributed through Apple's App Store and is also governed by Apple's standard
+      Licensed Application End User License Agreement ("Apple's EULA"). If these terms and Apple's EULA conflict
+      about the app, Apple's EULA prevails.</p>
+
+    <h2>2. Independent from Apple and others</h2>
+    <p>Pocket Roomie is an independent app. It is not made, sponsored, endorsed or approved by Apple Inc. or by any
+      accessory, beacon or chip maker. It works with the Apple Home app and the accessories you have already set
+      up there; it does not replace them, and it does not change your Home setup. Product names are trademarks of
+      their owners (see <a href="legal.html">Legal &amp; Credits</a>).</p>
+
+    <h2>3. Use at your own risk, especially for safety</h2>
+    <p>Pocket Roomie can switch lights, outlets, fans, blinds, thermostats, locks, garage doors and other accessories in
+      your home. Please use it responsibly:</p>
+    <ul>
+      <li><b>Don't rely on Pocket Roomie for safety, security or health.</b> Don't use it as the only way to lock a
+        door, close a garage, arm an alarm, switch off a heater or any appliance, or to control anything where a
+        failure could cause injury or damage.</li>
+      <li><b>What the screen shows may be wrong.</b> Accessories can be slow, unreachable or out of date, and a
+        command may fail or arrive late. Check the real accessory when it matters.</li>
+      <li><b>Room detection is an estimate.</b> Auto mode can pick the wrong room or change rooms unexpectedly,
+        and then a tile may control a different room than you expect. Check which room is shown before you act.</li>
+      <li><b>Look after other people.</b> You are responsible for who can use your iPhone, your home and your
+        accessories, including children and guests.</li>
+    </ul>
+
+    <h2>4. The software is provided "as is"</h2>
+    <p class="caps">Pocket Roomie is provided "as is" and "as available", without warranties of any kind, express or
+      implied, including warranties of merchantability, fitness for a particular purpose, accuracy, reliability,
+      availability, non-infringement and uninterrupted or error-free operation, to the maximum extent permitted
+      by law. We don't promise that Pocket Roomie will work with every accessory, iPhone or iOS version, or that it will
+      keep working after changes by Apple or others.</p>
+
+    <h2>5. Limitation of liability</h2>
+    <p class="caps">To the maximum extent permitted by law, the developers and contributors of Pocket Roomie are not
+      liable for any indirect, incidental, special, consequential or punitive damages, or for any loss of data,
+      profits, use or goodwill, or for any damage to property or to accessories, devices or boards, arising from
+      or related to your use of (or inability to use) Pocket Roomie, even if we were told this could happen. To the
+      maximum extent permitted by law, our total liability for any claim is limited to the amount you paid us for
+      Pocket Roomie in the twelve months before the claim, or zero if you paid nothing.</p>
+    <p>Nothing in these terms excludes or limits liability that cannot be excluded or limited by law, such as
+      liability for death or personal injury caused by negligence, for fraud or intentional wrongdoing, or any
+      rights you have as a consumer under mandatory law where you live. Some places don't allow some of the
+      limits above, so they may not apply to you.</p>
+
+    <h2>6. Third-party products and services</h2>
+    <p>Pocket Roomie relies on Apple's HomeKit and on accessories, beacons and boards made by others. We don't control
+      them and are not responsible for them, for their behavior, safety, security or availability, or for what
+      they do when Pocket Roomie sends them a command. Your use of them is under their makers' terms.</p>
+
+    <h2>7. Room beacons and the ESP32 firmware</h2>
+    <ul>
+      <li>The firmware is open source under the MIT license (see <a href="legal.html">Legal &amp; Credits</a>),
+        and, like the license says, is provided without warranty.</li>
+      <li><b>Flashing a board is at your own risk.</b> It erases what is on the board and can, in rare cases,
+        leave it unusable. We are not responsible for damaged, lost or unusable boards, computers, USB cables or
+        power supplies.</li>
+      <li>Use a suitable, certified USB power supply and follow your board maker's safety instructions. Don't use
+        a board in a way, or in a place, where heat, electrical faults or radio signals could cause harm.</li>
+      <li>Room beacons transmit Bluetooth signals. You are responsible for following the radio rules where you
+        live. Beacons and boards from other makers have their own instructions and risks.</li>
+    </ul>
+
+    <h2>8. The website and the installer</h2>
+    <p>The website and the web installer are provided "as is". The installer uses your browser's Web Serial
+      feature and works only in browsers that support it. Check what you are installing and from where; we can't
+      promise that the page will be available or error-free.</p>
+
+    <h2>9. What you may and may not do</h2>
+    <p>Please don't misuse Pocket Roomie: don't use it unlawfully, don't try to break, overload or reverse engineer it
+      except where the law or an open-source license lets you, don't remove notices, and don't present Pocket Roomie, its
+      name or its icon as yours or as endorsed by us. The open-source parts (the firmware and the code samples
+      published in our repository) may be used under their licenses.</p>
+
+    <h2>10. Ownership</h2>
+    <p>The Pocket Roomie app, its icon, design, texts, screenshots and website are owned by the Pocket Roomie developers,
+      and all rights are reserved (we claim no rights in any name that others may own), except for the open-source parts and the third-party materials listed in
+      <a href="legal.html">Legal &amp; Credits</a>, which stay under their own licenses. Using Pocket Roomie gives you a
+      limited, personal, non-exclusive, non-transferable right to use the app, under Apple's EULA, and no
+      ownership of it.</p>
+
+    <h2>11. Feedback</h2>
+    <p>If you send us ideas, bug reports or other feedback (for example on GitHub), we may use them freely,
+      without payment or credit. Please don't send anything private or confidential.</p>
+
+    <h2>12. Changes, ending and other terms</h2>
+    <p>We may change Pocket Roomie, or these terms, from time to time; the current terms are on this page with their
+      date. Continuing to use Pocket Roomie after a change means you accept it. You can stop using Pocket Roomie at any time
+      by deleting the app. If a part of these terms is found unenforceable, the rest still applies. Not enforcing
+      a term is not giving it up. These terms are the whole agreement between you and us about Pocket Roomie, apart from
+      Apple's EULA. They are governed by the law that applies where the developers are established, without its
+      conflict-of-law rules, except that the mandatory consumer protection laws of the country where you live
+      still apply to you.</p>
+
+    <h2>13. Contact</h2>
+    <p>Questions about these terms? Open an issue at
+      <a href="https://github.com/pocketroomie/pocketroomie/issues">github.com/pocketroomie/pocketroomie/issues</a>.</p>
+    <p class="note">Last updated November 25, 2026.</p>
+  </div>
+
+  <footer>
+    <nav>
+      <a href="./">Pocket Roomie</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="legal.html">Legal &amp; Credits</a>
+      <a href="https://github.com/pocketroomie/pocketroomie">Source code</a>
+      <a href="https://github.com/pocketroomie/pocketroomie/issues">Support</a>
+    </nav>
+    Pocket Roomie is an independent app, not made by, endorsed by or affiliated with Apple Inc. All product names and trademarks belong to their owners; see <a href="legal.html">Legal &amp; Credits</a>.
+  </footer>
+</div>
+</body>
+</html>
