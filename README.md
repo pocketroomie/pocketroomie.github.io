@@ -3,7 +3,7 @@
 Firmware that turns any ESP32 into a Bluetooth room beacon for the **Pocket Roomie** iOS app,
 plus a one-click web installer.
 
-**Install:** https://pocketroomie.github.io/pocketroomie/#beacons (Chrome or Edge on a computer). About Pocket Roomie: https://pocketroomie.github.io/pocketroomie/
+**Install:** https://pocketroomie.github.io/#beacons (Chrome or Edge on a computer). About Pocket Roomie: https://pocketroomie.github.io/
 
 ## How it works
 
@@ -67,6 +67,6 @@ the firmware files to GitHub Pages. To build locally: `cd firmware && idf.py set
 MIT (see `LICENSE`), provided as is, without warranty. Third-party components and trademarks: see
 `NOTICES.md`. Pocket Roomie is an independent project, not affiliated with Apple Inc.
 
-- Privacy Policy: https://pocketroomie.github.io/pocketroomie/privacy.html
-- Terms of Use: https://pocketroomie.github.io/pocketroomie/terms.html
-- Legal & Credits: https://pocketroomie.github.io/pocketroomie/legal.html
+- Privacy Policy: https://pocketroomie.github.io/privacy.html
+- Terms of Use: https://pocketroomie.github.io/terms.html
+- Legal & Credits: https://pocketroomie.github.io/legal.html
